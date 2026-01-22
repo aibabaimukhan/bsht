@@ -1,0 +1,63 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background: radial-gradient(circle, #041a1a, #000);
+  color: #00ffcc;
+  overflow: hidden;
+}
+
+.presentation {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 80px;
+  opacity: 0;
+  transform: scale(1.1);
+  transition: all 1s ease;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+h1, h2 {
+  font-size: 3em;
+  text-shadow: 0 0 20px #00ffcc;
+}
+
+p, li {
+  font-size: 1.5em;
+  margin-top: 20px;
+}
+
+.controls {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
+
+button {
+  background: transparent;
+  border: 2px solid #00ffcc;
+  color: #00ffcc;
+  font-size: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+button:hover {
+  background: #00ffcc;
+  color: #000;
+}

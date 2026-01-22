@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Внутреннее строение насекомых</title>
+<style>
+:root {
+    --primary: #2d5a27;
+    --dark: #1a3c15;
+    --accent: #ffb703;
+    --bg: #0f1a11;
+    --text-light: #ffffff;
+}
+
+/* --- Общие стили --- */
+* { box-sizing: border-box; scroll-behavior: smooth; }
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-light);
+}
+
+/* --- Навигация --- */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+nav a:hover { color: var(--accent); }
+
+/* --- Hero Section --- */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1a3c15 0%, #2d5a27 100%);
+    color: white;
+    text-align: center;
+}
+#canvas-bg {
+    position: absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    z-index:1;
+}
+.hero-content {
+    position: relative;
+    z-index:2;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.2);
+    max-width: 800px;
+    margin: 0 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.hero h1 { font-size:3rem; margin:0; letter-spacing:2px; line-height:1.2; }
+.hero p { margin-top: 15px; }
+.btn {
+    margin-top: 30px;
+    padding: 15px 40px;
+    background: var(--accent);
+    color: var(--dark);
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 50px;
+    display: inline-block;
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+.btn:hover { transform: scale(1.05); box-shadow: 0 0 20px var(--accent); }
+
+/* --- Секции контента --- */
+section.content-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 100px 10%;
+}
+
+/* --- Плейлист/Слайдер --- */
+.playlist-container {
+    display: flex;
+    width: 100%;
+    max-width: 1100px;
+    gap: 30px;
+    background: rgba(255,255,255,0.08);
+    padding: 30px;
+    border-radius: 40px;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.main-display {
+    flex: 2;
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.main-display h2 {
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin: 0 0 20px 0;
+}
+.main-display .content-text {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    animation: fadeIn 0.5s ease;
+}
+.playlist-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-left: 1px solid rgba(255,255,255,0.1);
+    padding-left: 30px;
+}
+.playlist-item {
+    padding: 15px 20px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid transparent;
+    font-weight: 600;
+    color: rgba(255,255,255,0.6);
+}
+.playlist-item:hover { background: rgba(255,255,255,0.1); }
+.playlist-item.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    transform: scale(1.05);
+}
+.highlight { color: var(--accent); font-weight: bold; }
+@keyframes fadeIn {
+    from { opacity:0; transform: translateY(10px); }
+    to { opacity:1; transform: translateY(0); }
+}
+@media (max-width:850px) {
+    .playlist-container { flex-direction: column; }
+    .playlist-side { border-left: none; padding-left:0; border-top:1px solid rgba(255,255,255,0.1); padding-top:20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <a href="#hero">Главная</a>
+    <a href="#digestive">Пищеварение</a>
+    <a href="#circulatory">Кровеносная</a>
+    <a href="#nervous">Нервная</a>
+    <a href="#excretory">Выделительная</a>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+    <canvas id="canvas-bg"></canvas>
+    <div class="hero-content">
+        <h1>Внутреннее строение тела насекомых</h1>
+        <p>Учебный модуль дисциплины "Охрана и защита леса"<br>Преподаватель: Темирболатова А.Б.</p>
+        <a href="#digestive" class="btn">Начать изучение</a>
+    </div>
+</section>
+
+<!-- Плейлисты -->
+<section id="digestive" class="content-section" style="background:#1e3a2f;">
+    <h1>Морфология насекомого</h1>
+    <div class="playlist-container">
+        <div class="main-display" id="display-digestive">
+            <h2>🍴 Пищеварительная система</h2>
+            <div class="content-text">Выберите отдел в меню справа, чтобы узнать подробнее.</div>
+        </div>
+        <div class="playlist-side">
+            <div class="playlist-item active" onclick="updateContent('digestive',0)">Передняя кишка</div>
+            <div class="playlist-item" onclick="updateContent('digestive',1)">Средняя кишка</div>
+            <div class="playlist-item" onclick="updateContent('digestive',2)">Задняя кишка</div>
+        </div>
+    </div>
+</section>
+
+<section id="circulatory" class="content-section" style="background:#142116;">
+    <h1>Дыхательная система насекомых</h1>
+    <div class="playlist-container">
+        <div class="main-display" id="display-circulatory">
+            <h2>Дыхательная система насекомых</h2>
+            <div class="content-text">Выберите элемент справа, чтобы узнать подробнее.</div>
+            <img id="circulatory-img" src="" alt="" style="width:100%; max-height:400px; object-fit:contain; margin-top:20px; display:none;">
+        </div>
+        <div class="playlist-side">
+            <div class="playlist-item active" onclick="updateContent('circulatory',0)">Тип системы</div>
+            <div class="playlist-item" onclick="updateContent('circulatory',1)">Гемолимфа</div>
+            <div class="playlist-item" onclick="updateContent('circulatory',2)">Сердце и аорта</div>
+        </div>
+    </div>
+</section>
+
+
+<section id="nervous" class="content-section" style="background:#1b2e26;">
+    <div class="playlist-container">
+        <div class="main-display" id="display-nervous">
+            <h2>🧠 Нервная система</h2>
+            <div class="content-text">Выберите уровень организации ЦНС.</div>
+        </div>
+        <div class="playlist-side">
+            <div class="playlist-item active" onclick="updateContent('nervous',0)">Головной мозг</div>
+            <div class="playlist-item" onclick="updateContent('nervous',1)">Брюшная цепочка</div>
+            <div class="playlist-item" onclick="updateContent('nervous',2)">Инстинкты</div>
+        </div>
+    </div>
+</section>
+
+<section id="excretory" class="content-section" style="background:#233b2d;">
+    <div class="playlist-container">
+        <div class="main-display" id="display-excretory">
+            <h2>🧪 Выделительная система</h2>
+            <div class="content-text">Основные органы: Мальпигиевы сосуды и жировое тело.</div>
+        </div>
+        <div class="playlist-side">
+            <div class="playlist-item active" onclick="updateContent('excretory',0)">Мальпигиевы сосуды</div>
+            <div class="playlist-item" onclick="updateContent('excretory',1)">Жировое тело</div>
+        </div>
+    </div>
+</section>
+
+<!-- JS -->
+<script>
+// Фон с частицами
+const canvas = document.getElementById('canvas-bg');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    particles = [];
+    for (let i = 0; i < 80; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 1.5, // скорость увеличена
+            vy: (Math.random() - 0.5) * 1.5, // скорость увеличена
+            size: Math.random() * 2 + 1
+        });
+    }
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+
+    particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+            if (dist < 150) {
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+        }
+    });
+
+    requestAnimationFrame(draw);
+}
+
+window.addEventListener('resize', init);
+init();
+draw();
+
+
+// Данные для плейлиста
+const data = {
+    digestive:[
+        {title:"Передняя кишка", text:"<span class='highlight'>Глотка, пищевод и зоб</span>. Мышечный желудок перетирает пищу."},
+        {title:"Средняя кишка", text:"<span class='highlight'>Переваривание и всасывание</span> питательных веществ."},
+        {title:"Задняя кишка", text:"<span class='highlight'>Всасывание воды</span> и формирование экскрементов."}
+    ],
+    circulatory:[
+        {title:"Тип системы", text:"<span class='highlight'>Незамкнутая</span> кровеносная система насекомых."},
+        {title:"Гемолимфа", text:"Жидкость переносит питательные вещества и гормоны."},
+        {title:"Сердце и аорта", text:"Спинной сосуд: задняя часть — <span class='highlight'>сердце</span>, передняя — аорта."}
+    ],
+    nervous:[
+        {title:"Головной мозг", text:"Состоит из <span class='highlight'>трёх отделов</span>: протоцеребрум, дейтоцеребрум, тритоцеребрум."},
+        {title:"Брюшная цепочка", text:"Парные ганглии в каждом сегменте тела, соединённые перемычками."},
+        {title:"Инстинкты", text:"Сложное поведение: строительство гнёзд, охота, забота о потомстве."}
+    ],
+    excretory:[
+        {title:"Мальпигиевы сосуды", text:"Трубочки, извлекающие продукты распада из гемолимфы в кишечник."},
+        {title:"Жировое тело", text:"Служит <span class='highlight'>накопителем продуктов обмена</span>, например мочевой кислоты."}
+    ]
+};
+
+const backgrounds = {
+  digestive: [
+    'linear-gradient(135deg, #1a3c15 0%, #2d5a27 100%)', // Передняя кишка
+    'linear-gradient(135deg, #264d36 0%, #3e6b4c 100%)', // Средняя кишка
+    'linear-gradient(135deg, #1b3324 0%, #2c5033 100%)'  // Задняя кишка
+  ],
+ circulatory: [
+    { title: "Тип системы", text: "", img: "img/1.jpg", background: '' },
+    { title: "Гемолимфа", text: "", img: "img/2.jpg", background: 'linear-gradient(135deg, #1a2d1b 0%, #295237 100%)' },
+    { title: "Сердце и аорта", text: "Спинной сосуд: задняя часть — <span class='highlight'>сердце</span>, передняя — аорта.", img: null, background: 'linear-gradient(135deg, #102116 0%, #1b3a28 100%)' }
+],
+
+  nervous: [
+    'linear-gradient(135deg, #1b2e26 0%, #2a4a37 100%)',
+    'linear-gradient(135deg, #16291f 0%, #274533 100%)',
+    'linear-gradient(135deg, #1d3228 0%, #2e4d3b 100%)'
+  ],
+  excretory: [
+    'linear-gradient(135deg, #233b2d 0%, #335443 100%)',
+    'linear-gradient(135deg, #1d3227 0%, #2f4e3b 100%)'
+  ]
+};
+
+
+function updateContent(sectionId,index){
+    const sectionData = data[sectionId][index];
+    const display = document.getElementById(`display-${sectionId}`);
+    const items = document.querySelectorAll(`#${sectionId} .playlist-item`);
+    
+    // Обновляем текст
+    display.querySelector('h2').innerText = sectionData.title;
+    display.querySelector('.content-text').innerHTML = sectionData.text;
+    
+    // Активная кнопка
+    items.forEach((item,i)=>{item.classList.toggle('active',i===index);});
+    
+    // Анимация текста
+    const textElement = display.querySelector('.content-text');
+    textElement.style.animation='none';
+    textElement.offsetHeight;
+    textElement.style.animation=null;
+    
+    // Плавное изменение фона
+    const section = document.getElementById(sectionId);
+    section.style.transition = 'background 1s ease';
+    section.style.background = backgrounds[sectionId][index];
+}
+
+
+
+</script>
+
+</body>
+</html>
