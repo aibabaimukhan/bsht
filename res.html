@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Результаты теста</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+  table { border-collapse: collapse; width: 100%; background: white; display: none; }
+  th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+  th { background: #2d5a27; color: white; }
+
+  /* ===== Прелоадер ===== */
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+
+  .loader {
+    border: 8px solid #f3f3f3; /* светлый фон */
+    border-top: 8px solid #2d5a27; /* темный акцент */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+</style>
+</head>
+<body>
+
+<h2><a href="index.html">Результаты теста</a></h2>
+
+<!-- Прелоадер -->
+<div class="loader-container" id="loader">
+  <div class="loader"></div>
+</div>
+
+<!-- Таблица -->
+<table id="resultsTable">
+  <thead>
+    <tr>
+      <th>Дата</th>
+      <th>ФИО</th>
+      <th>Активные баллы</th>
+      <th>Пассивные баллы</th>
+    </tr>
+  </thead>
+  <tbody id="resultsTableBody"></tbody>
+</table>
+
+<script>
+async function loadResults() {
+  const loader = document.getElementById("loader");
+  const table = document.getElementById("resultsTable");
+  const tbody = document.getElementById("resultsTableBody");
+
+  try {
+    // Показываем прелоадер
+    loader.style.display = "flex";
+    table.style.display = "none";
+
+    const response = await fetch("https://script.google.com/macros/s/AKfycbx54V08GxPbIYkTVpewdsfdyAkrt26k5N28O0iGbc_0p5tui7vSVjaFnwBZmzU--gc/exec");
+    const data = await response.json();
+
+    tbody.innerHTML = "";
+    data.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row['Дата'] || ''}</td>
+        <td>${row['ФИО'] || ''}</td>
+        <td>${row['activeScore'] || ''}</td>
+        <td>${row['passiveScore'] || ''}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Скрываем прелоадер и показываем таблицу
+    loader.style.display = "none";
+    table.style.display = "table";
+
+  } catch(err) {
+    console.error("Ошибка загрузки результатов:", err);
+    alert("Не удалось загрузить результаты");
+    loader.style.display = "none";
+  }
+}
+
+// Загружаем данные при открытии страницы
+loadResults();
+
+// Блокировка F12, Ctrl+Shift+I/J/C, Ctrl+U
+document.addEventListener('keydown', function(e) {
+    // F12
+    if (e.key === 'F12') e.preventDefault();
+
+    // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+    if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) e.preventDefault();
+
+    // Ctrl+U (Просмотр исходного кода)
+    if (e.ctrlKey && e.key.toUpperCase() === 'U') e.preventDefault();
+});
+
+// Блокировка правой кнопки мыши
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert('Доступ к контекстному меню запрещен!');
+});
+</script>
+
+</body>
+</html>
