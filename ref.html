@@ -14,9 +14,7 @@
     --text-light: #ffffff;
 }
 
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
@@ -25,45 +23,40 @@ body {
     color: var(--text-light);
     min-height: 100vh;
     display: flex;
-    align-items: center;
     justify-content: center;
+    padding: 40px 10px;
 }
 
-/* Карточка */
 .reflection-card {
     background: rgba(255,255,255,0.12);
     backdrop-filter: blur(12px);
     border-radius: 24px;
     padding: 40px;
-    max-width: 700px;
-    width: 95%;
+    max-width: 900px;
+    width: 100%;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Заголовок */
-.reflection-card h1 {
+h1 {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
-.reflection-card h1 a {
-    color: #ffffff;
+h1 a {
+    color: #fff;
     text-decoration: underline;
     text-underline-offset: 6px;
 }
 
 /* Блоки */
-.block {
-    margin-bottom: 20px;
-}
+.block { margin-bottom: 25px; }
 
 .block-title {
     margin-bottom: 10px;
     font-weight: 600;
 }
 
-/* Кнопки */
 .options {
     display: flex;
     gap: 12px;
@@ -72,7 +65,7 @@ body {
 
 .option {
     flex: 1;
-    min-width: 120px;
+    min-width: 140px;
     padding: 14px;
     text-align: center;
     border-radius: 16px;
@@ -89,7 +82,7 @@ body {
 
 /* Кнопка */
 .submit-btn {
-    margin-top: 20px;
+    margin: 30px 0;
     width: 100%;
     padding: 16px;
     border-radius: 50px;
@@ -101,14 +94,27 @@ body {
     cursor: pointer;
 }
 
-.submit-btn:hover {
-    box-shadow: 0 0 20px var(--accent);
+/* Графики */
+.charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
 }
 
-/* График */
-canvas {
-    margin-top: 30px;
+
+
+.chart-box {
+    background: rgba(0,0,0,0.25);
+    padding: 20px;
+    border-radius: 18px;
 }
+
+@media (max-width: 768px) {
+    .charts {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 </head>
 
@@ -117,6 +123,7 @@ canvas {
 <div class="reflection-card">
     <h1><a href="index.html">Рефлексия после урока</a></h1>
 
+    <!-- Настроение -->
     <div class="block">
         <div class="block-title">Моё настроение после урока:</div>
         <div class="options" data-group="mood">
@@ -126,6 +133,7 @@ canvas {
         </div>
     </div>
 
+    <!-- Урок -->
     <div class="block">
         <div class="block-title">Урок был для меня:</div>
         <div class="options" data-group="lesson">
@@ -135,6 +143,7 @@ canvas {
         </div>
     </div>
 
+    <!-- Самооценка -->
     <div class="block">
         <div class="block-title">Моя работа на уроке:</div>
         <div class="options" data-group="work">
@@ -145,7 +154,14 @@ canvas {
 
     <button class="submit-btn">Завершить рефлексию</button>
 
-    <canvas id="chart"></canvas>
+    <div class="charts">
+        <div class="chart-box">
+            <canvas id="moodChart"></canvas>
+        </div>
+        <div class="chart-box">
+            <canvas id="lineChart"></canvas>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -153,37 +169,60 @@ canvas {
 <script>
 const state = { mood: null, lesson: null, work: null };
 
-const results = {
-    good: 0,
-    normal: 0,
-    bad: 0
-};
+const moodData = { good: 0, normal: 0, bad: 0 };
+const lessonData = { interesting: 0, useful: 0, hard: 0 };
+const workData = { ok: 0, better: 0 };
 
-// выбор вариантов
+let counter = 0;
+const labels = [];
+
+// выбор
 document.querySelectorAll('.option').forEach(option => {
     option.addEventListener('click', () => {
         const group = option.parentElement;
         group.querySelectorAll('.option').forEach(o => o.classList.remove('active'));
         option.classList.add('active');
-
         state[group.dataset.group] = option.dataset.value;
     });
 });
 
-// график
-const ctx = document.getElementById('chart').getContext('2d');
-const chart = new Chart(ctx, {
+// график настроения
+const moodChart = new Chart(document.getElementById('moodChart'), {
     type: 'bar',
     data: {
         labels: ['😊 Отличное', '😐 Нормальное', '😕 Сложно'],
         datasets: [{
             label: 'Настроение класса',
             data: [0, 0, 0],
-            backgroundColor: ['#4caf50', '#ffb703', '#e63946']
+            backgroundColor: ['#4caf50','#ffb703','#e63946']
         }]
     },
     options: {
-        responsive: true,
+        scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+    }
+});
+
+// линейный график (урок + самооценка)
+const lineChart = new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+        labels,
+        datasets: [
+            {
+                label: 'Оценка урока (позитив)',
+                data: [],
+                borderColor: '#4caf50',
+                tension: 0.3
+            },
+            {
+                label: 'Самооценка работы (доволен)',
+                data: [],
+                borderColor: '#ffb703',
+                tension: 0.3
+            }
+        ]
+    },
+    options: {
         scales: {
             y: { beginAtZero: true, ticks: { stepSize: 1 } }
         }
@@ -197,16 +236,21 @@ document.querySelector('.submit-btn').addEventListener('click', () => {
         return;
     }
 
-    results[state.mood]++;
+    counter++;
+    labels.push(counter.toString());
 
-    chart.data.datasets[0].data = [
-        results.good,
-        results.normal,
-        results.bad
-    ];
-    chart.update();
+    moodData[state.mood]++;
+    moodChart.data.datasets[0].data = Object.values(moodData);
+    moodChart.update();
 
-    // очистка для следующего ученика
+    // считаем "позитив"
+    const lessonPositive = state.lesson !== 'hard' ? 1 : 0;
+    const workPositive = state.work === 'ok' ? 1 : 0;
+
+    lineChart.data.datasets[0].data.push(lessonPositive);
+    lineChart.data.datasets[1].data.push(workPositive);
+    lineChart.update();
+
     document.querySelectorAll('.option').forEach(o => o.classList.remove('active'));
     state.mood = state.lesson = state.work = null;
 });
