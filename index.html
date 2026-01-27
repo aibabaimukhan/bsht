@@ -65,10 +65,21 @@ nav a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #1a3c15, #2d5a27);
     text-align: center;
     overflow: hidden;
 }
+
+/* Видео-фон */
+.hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;          /* ниже canvas и контента */
+    filter: brightness(0.4);
+}
+
 
 #canvas-bg {
     position: absolute;
@@ -440,13 +451,27 @@ nav a:hover {
 
 <!-- Hero -->
 <section class="hero" id="hero">
+
+    <!-- Canvas (если нужен эффект частиц) -->
     <canvas id="canvas-bg"></canvas>
+
+    <!-- Видео-фон -->
+    <video class="hero-video" autoplay muted loop playsinline>
+        <source src="C:\Users\Aud107PC1\Downloads\Анимация_жука_под_микроскопом.mp4" type="video/mp4">
+    </video>
+
+    <!-- Контент -->
     <div class="hero-content">
         <h1>Внутреннее строение тела насекомых</h1>
-        <p>Учебный модуль дисциплины "Охрана и защита леса"<br>Преподаватель: Темирболатова А.Б.</p>
+        <p>
+            Учебный модуль дисциплины "Охрана и защита леса"<br>
+            Преподаватель: Темирболатова А.Б.
+        </p>
         <a href="#digestive" class="btn">Начать изучение</a>
     </div>
+
 </section>
+
 
 
 <section class="carousel-fullscreen" id="digestive">
