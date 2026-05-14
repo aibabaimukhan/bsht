@@ -3,117 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Внутреннее строение насекомых - Интерактивный урок</title>
+    <title>Внутреннее строение насекомых</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
-        header { background: #2c3e50; color: #fff; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 30px; }
-        .section { background: #fff; padding: 25px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        h2 { color: #27ae60; border-bottom: 2px solid #27ae60; padding-bottom: 10px; }
-        h3 { color: #2980b9; }
-        .theory-block { border-left: 5px solid #2980b9; padding-left: 15px; margin: 15px 0; }
-        .quiz-container { background: #ebf5fb; padding: 20px; border-radius: 8px; }
-        .question { margin-bottom: 15px; font-weight: bold; }
-        .options label { display: block; background: #fff; padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; transition: 0.3s; }
-        .options label:hover { background: #d5dbdb; }
-        .btn { display: inline-block; background: #27ae60; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        .btn:hover { background: #219150; }
-        .reflection-area { width: 100%; height: 100px; padding: 10px; border-radius: 4px; border: 1px solid #ccc; }
-        #result { margin-top: 20px; font-weight: bold; color: #e67e22; }
-        .hidden { display: none; }
+        /* Основные стили страницы */
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.6; color: #333; max-width: 950px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        header { background: #1a5276; color: #fff; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .section { background: #fff; padding: 25px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        h2 { color: #196f3d; border-bottom: 2px solid #2ecc71; padding-bottom: 10px; margin-top: 0; }
+        
+        /* Стили для проверки ДЗ */
+        .hw-container { background: #fef9e7; border: 2px dashed #f39c12; padding: 25px; border-radius: 12px; }
+        .hw-item { margin-bottom: 20px; }
+        .term { font-weight: bold; color: #d35400; display: block; margin-bottom: 5px; }
+        .drop-zone { border-bottom: 2px solid #bdc3c7; min-height: 30px; padding: 8px; background: #fff; cursor: pointer; transition: 0.3s; border-radius: 4px; }
+        .drop-zone:empty::before { content: "Нажмите на вариант ниже..."; color: #999; font-style: italic; }
+        .answer-pool { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #ddd; }
+        .draggable { background: #3498db; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; user-select: none; transition: 0.2s; }
+        .draggable.used { opacity: 0.3; cursor: default; pointer-events: none; }
+        .correct { background-color: #d4efdf !important; border-color: #27ae60 !important; color: #196f3d; font-weight: bold; }
+        .wrong { background-color: #f9ebea !important; border-color: #c0392b !important; color: #922b21; }
+
+        /* Стили аккордеона для ТЕОРИИ */
+        .theory-accordion { margin-top: 20px; border-radius: 12px; overflow: hidden; border: 1px solid #e0e6ed; }
+        .accordion-item { border-bottom: 1px solid #e0e6ed; }
+        .accordion-header { background-color: #fff; padding: 18px 25px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: background 0.3s; font-weight: bold; color: #1a5276; }
+        .accordion-header:hover { background-color: #f8f9fa; }
+        .accordion-content { display: none; padding: 20px 25px; background-color: #ffffff; border-top: 1px solid #f0f2f5; }
+        .accordion-content.active { display: block; }
+        .theory-layout { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+        .theory-text { flex: 1; min-width: 300px; }
+        .theory-image { flex: 1; min-width: 250px; background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; padding: 10px; text-align: center; }
+        
+        /* Кнопки и прочее */
+        .btn { background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: #1e8449; }
+        #status-msg { margin-left: 15px; font-weight: bold; }
+        .badge { padding: 2px 8px; border-radius: 10px; font-size: 0.85em; margin-right: 5px; background: #d6eaf8; color: #2e86c1; font-weight: bold; }
+        textarea { width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Внутреннее строение тела насекомых</h1>
-    <p>План учебного занятия (ПМ 03 / РО 3.2)</p>
+    <h3>ГККП «Высший колледж лесного хозяйства, экологии и туризма, город Щучинск»</h3>
+    <h1>Тема: Внутреннее строение тела насекомых</h1>
+    <p><strong>Подготовил педагог:</strong> Темирболатова А.Б.</p>
 </header>
 
-<div class="section">
-    <h2>1. Пищеварительная система</h2>
-    <p>Представляет собой трубчатый орган, обеспечивающий прием, переваривание пищи и всасывание веществ.</p>
-    <div class="theory-block">
-        <h3>Три отдела кишечника[cite: 26]:</h3>
-        <ul>
-            <li><strong>Передняя кишка:</strong> рот, глотка, пищевод, зоб, мускульный желудок (механическая обработка)[cite: 27, 28].</li>
-            <li><strong>Средняя кишка:</strong> основной отдел пищеварения, всасывание питательных веществ. Отсутствует хитиновая выстилка[cite: 29, 31].</li>
-            <li><strong>Задняя кишка:</strong> подвздошная, прямая кишка, анальное отверстие (всасывание воды)[cite: 32, 33].</li>
-        </ul>
-    </div>
-</div>
-
-<div class="section">
-    <h2>2. Дыхание и Кровообращение</h2>
-    <h3>Дыхательная система </h3>
-    <p>Насекомые дышат с помощью <strong>трахейной системы</strong>. Воздух поступает через <strong>дыхальца (стигмы)</strong> и по трахеолам доставляется прямо к клеткам[cite: 40, 44].</p>
+<div class="section hw-container">
+    <h2>📊 Проверка домашнего задания: "Юный энтомолог"</h2>
+    <p><i>Инструкция: Правильно сопоставьте разделы биологии.</i></p>
     
-    <h3>Кровеносная система </h3>
-    <p><strong>Незамкнутая.</strong> Гемолимфа (жидкость) переносит питательные вещества и гормоны, но <strong>не участвует в переносе кислорода</strong>[cite: 51, 56, 57]. Основной орган — сердце (спинной сосуд)[cite: 53].</p>
+    <div id="quiz-slots">
+        <div class="hw-item">
+            <span class="term">Энтомология:</span>
+            <div class="drop-zone" id="entomology" data-correct="def1" onclick="clearSlot('entomology')"></div>
+        </div>
+        <div class="hw-item">
+            <span class="term">Морфология:</span>
+            <div class="drop-zone" id="morphology" data-correct="def2" onclick="clearSlot('morphology')"></div>
+        </div>
+        <div class="hw-item">
+            <span class="term">Анатомия:</span>
+            <div class="drop-zone" id="anatomy" data-correct="def3" onclick="clearSlot('anatomy')"></div>
+        </div>
+        <div class="hw-item">
+            <span class="term">Физиология:</span>
+            <div class="drop-zone" id="physiology" data-correct="def4" onclick="clearSlot('physiology')"></div>
+        </div>
+    </div>
+
+    <div class="answer-pool" id="pool">
+        <div class="draggable" id="def1" onclick="assign('def1')">изучает насекомых, их развитие и роль в природе</div>
+        <div class="draggable" id="def4" onclick="assign('def4')">изучает функции органов и процессы жизнедеятельности</div>
+        <div class="draggable" id="def2" onclick="assign('def2')">изучает строение и расположение органов тела</div>
+        <div class="draggable" id="def3" onclick="assign('def3')">изучает внутреннее строение насекомых, органы и системы</div>
+    </div>
+    
+    <button class="btn" onclick="checkAnswers()">Проверить ДЗ</button>
+    <button class="btn" style="background:#7f8c8d" onclick="resetQuiz()">Сбросить</button>
+    <span id="status-msg"></span>
 </div>
 
 <div class="section">
-    <h2>3. Координация и Выделение</h2>
-    <div class="theory-block">
-        <strong>Нервная система:</strong> Узловой тип. Состоит из головного мозга (надглоточный ганглий), подглоточного ганглия и брюшной нервной цепочки[cite: 66, 68, 70].
-    </div>
-    <div class="theory-block">
-        <strong>Выделительная система:</strong> Основной орган — <strong>Мальпигиевы сосуды</strong> (тонкие трубочки, впадающие в кишечник)[cite: 79, 82]. Главный продукт выделения — мочевая кислота[cite: 108].
-    </div>
-</div>
+    <h2>📖 Теория: Внутренние системы организма</h2>
+    <p>Нажмите на систему, чтобы изучить её подробное строение:</p>
 
-<div class="section quiz-container">
-    <h2>Проверка знаний</h2>
-    <div id="quiz">
-        <div class="question">1. Какая система отвечает за доставку кислорода к тканям насекомых? [cite: 92]</div>
-        <div class="options">
-            <label><input type="radio" name="q1" value="a"> А) Кровеносная</label>
-            <label><input type="radio" name="q1" value="correct"> В) Дыхательная</label>
+    <div class="theory-accordion">
+        
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('digestive')">
+                <span>🍎 Пищеварительная система</span>
+                <span>▼</span>
+            </div>
+            <div id="digestive" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Представляет собой трубчатый орган для приёма пищи, переваривания и выведения остатков.</p>
+                        <p><span class="badge">1. Передняя кишка</span> Ротовая полость, глотка, пищевод, зоб, мускульный желудок. <i>Функция: захват и механическая обработка.</i></p>
+                        <p><span class="badge">2. Средняя кишка</span> Основной отдел пищеварения. Выделяет ферменты и всасывает питательные вещества.</p>
+                        <p><span class="badge">3. Задняя кишка</span> Подвздошная и прямая кишка. <i>Функция: всасывание воды и формирование кала.</i></p>
+                    </div>
+                    <div class="theory-image">
+                        
+
+[Image of the digestive system of an insect]
+
+                        <p><small>Схема отделов кишечника</small></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="question">2. В каком отделе кишечника происходит основное переваривание пищи? [cite: 97]</div>
-        <div class="options">
-            <label><input type="radio" name="q2" value="a"> А) Передняя кишка</label>
-            <label><input type="radio" name="q2" value="correct"> В) Средняя кишка</label>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('respiratory')">
+                <span>🌬️ Дыхательная система</span>
+                <span>▼</span>
+            </div>
+            <div id="respiratory" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Обеспечивает доставку кислорода прямо к клеткам, минуя кровь.</p>
+                        <ul>
+                            <li><b>Дыхальца (стигмы)</b> — отверстия на боках тела.</li>
+                            <li><b>Трахеи</b> — разветвлённые хитиновые трубочки.</li>
+                            <li><b>Трахеолы</b> — мельчайшие ответвления, контактирующие с клетками.</li>
+                        </ul>
+                        <p><i>Важно: Кровеносная система не участвует в переносе кислорода!</i></p>
+                    </div>
+                    <div class="theory-image">
+                        
+
+[Image of the respiratory system of an insect]
+
+                        <p><small>Трахейная система</small></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="question">3. Как называются основные органы выделения насекомых? [cite: 106]</div>
-        <div class="options">
-            <label><input type="radio" name="q3" value="a"> А) Почки</label>
-            <label><input type="radio" name="q3" value="correct"> В) Мальпигиевы сосуды</label>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('circulatory')">
+                <span>❤️ Кровеносная система</span>
+                <span>▼</span>
+            </div>
+            <div id="circulatory" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p><b>Незамкнутая.</b> Переносит питательные вещества и гормоны, но не кислород.</p>
+                        <p><span class="badge">Сердце</span> Спинной сосуд с клапанами, проталкивающий гемолимфу вперёд.</p>
+                        <p><span class="badge">Гемолимфа</span> Аналог крови; циркулирует в полости тела, омывая органы.</p>
+                        <p>Участвует в иммунной защите и терморегуляции.</p>
+                    </div>
+                    <div class="theory-image">
+                        
+
+[Image of the circulatory system of an insect]
+
+                        <p><small>Схема спинного сосуда (сердца)</small></p>
+                    </div>
+                </div>
+            </div>
         </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('nervous')">
+                <span>🧠 Нервная система</span>
+                <span>▼</span>
+            </div>
+            <div id="nervous" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Узловой тип (ганглионарный). Координирует движения и органы чувств.</p>
+                        <ul>
+                            <li><b>Мозг (надглоточный ганглий)</b> — сложное поведение.</li>
+                            <li><b>Подглоточный ганглий</b> — ротовой аппарат.</li>
+                            <li><b>Брюшная нервная цепочка</b> — контроль работы органов и мышц.</li>
+                        </ul>
+                    </div>
+                    <div class="theory-image">
+                        
+
+[Image of the nervous system of an insect]
+
+                        <p><small>Нервные узлы и цепочка</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('excretory')">
+                <span>♻️ Выделительная система</span>
+                <span>▼</span>
+            </div>
+            <div id="excretory" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Обеспечивает водно-солевой баланс.</p>
+                        <p><span class="badge">Мальпигиевы сосуды</span> Тонкие трубочки, впадающие в кишечник. Извлекают продукты обмена из гемолимфы.</p>
+                        <p><span class="badge">Жировое тело</span> Служит "почкой накопления" и запасом питательных веществ.</p>
+                    </div>
+                    <div class="theory-image">
+                        
+                        <p><small>Мальпигиевы сосуды</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <button class="btn" onclick="checkQuiz()">Проверить ответы</button>
-    <div id="result"></div>
 </div>
 
 <div class="section">
-    <h2>Рефлексия</h2>
-    <p>Оцените свою деятельность на уроке[cite: 112]:</p>
-    <select class="reflection-area" style="height: auto; margin-bottom: 10px;">
-        <option>Всё понятно, материал усвоен</option>
-        <option>Есть вопросы по некоторым системам органов</option>
-        <option>Тема показалась сложной</option>
-    </select>
-    <textarea class="reflection-area" placeholder="Что нового вы узнали сегодня? Что вызвало затруднения?"></textarea>
+    <h2>🌱 Рефлексия</h2>
+    <p>Напишите, что сегодня было самым интересным?</p>
+    <textarea id="reflection-text" placeholder="Ваш ответ..."></textarea>
     <br><br>
-    <button class="btn" onclick="alert('Спасибо за обратную связь!')">Отправить</button>
+    <button class="btn" style="background: #34495e;" onclick="alert('Спасибо за отличную работу!')">Завершить урок</button>
 </div>
 
 <script>
-    function checkQuiz() {
-        let score = 0;
-        const total = 3;
-        const answers = document.querySelectorAll('input[type="radio"]:checked');
-        
-        answers.forEach(answer => {
-            if (answer.value === 'correct') {
-                score++;
-            }
-        });
+    // Логика Аккордеона
+    function toggleAccordion(id) {
+        const content = document.getElementById(id);
+        const isActive = content.classList.contains('active');
+        document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('active'));
+        if (!isActive) content.classList.add('active');
+    }
 
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `Ваш результат: ${score} из ${total}. ` + 
-            (score === total ? "Отлично! Вы хорошо усвоили материал." : "Попробуйте перечитать теорию еще раз.");
+    // Логика Проверки ДЗ (с сохранением в LocalStorage)
+    window.onload = () => {
+        const saved = JSON.parse(localStorage.getItem('entomologyQuiz'));
+        if (saved) {
+            Object.keys(saved).forEach(slotId => {
+                const defId = saved[slotId];
+                if (defId) {
+                    const zone = document.getElementById(slotId);
+                    const defEl = document.getElementById(defId);
+                    if (defEl) {
+                        zone.innerText = defEl.innerText;
+                        zone.setAttribute('data-current-def', defId);
+                        defEl.classList.add('used');
+                    }
+                }
+            });
+        }
+    };
+
+    function assign(defId) {
+        const slots = document.querySelectorAll('.drop-zone');
+        const defEl = document.getElementById(defId);
+        for (let slot of slots) {
+            if (!slot.innerText) {
+                slot.innerText = defEl.innerText;
+                slot.setAttribute('data-current-def', defId);
+                defEl.classList.add('used');
+                saveState();
+                break;
+            }
+        }
+    }
+
+    function clearSlot(slotId) {
+        const slot = document.getElementById(slotId);
+        const defId = slot.getAttribute('data-current-def');
+        if (defId) {
+            document.getElementById(defId).classList.remove('used');
+            slot.innerText = "";
+            slot.removeAttribute('data-current-def');
+            slot.className = 'drop-zone';
+            saveState();
+        }
+    }
+
+    function checkAnswers() {
+        const slots = document.querySelectorAll('.drop-zone');
+        let errors = 0;
+        slots.forEach(slot => {
+            const current = slot.getAttribute('data-current-def');
+            const correct = slot.getAttribute('data-correct');
+            if (current === correct) slot.className = 'drop-zone correct';
+            else if (current) { slot.className = 'drop-zone wrong'; errors++; }
+        });
+        document.getElementById('status-msg').innerText = errors === 0 ? "✅ Отлично!" : `❌ Ошибок: ${errors}`;
+    }
+
+    function saveState() {
+        const state = {};
+        document.querySelectorAll('.drop-zone').forEach(s => state[s.id] = s.getAttribute('data-current-def'));
+        localStorage.setItem('entomologyQuiz', JSON.stringify(state));
+    }
+
+    function resetQuiz() {
+        localStorage.removeItem('entomologyQuiz');
+        location.reload();
     }
 </script>
 
