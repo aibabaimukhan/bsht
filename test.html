@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест: Внутреннее строение насекомых</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --success-color: #27ae60;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            user-select: none;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        .user-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #eef2f3;
+            border-radius: 8px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-left: 5px solid var(--accent-color);
+            background: #fafafa;
+        }
+        .question p {
+            font-weight: bold;
+            margin-top: 0;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .option:hover {
+            background: #f0f0f0;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-submit:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        /* Стили для финального сообщения */
+        #success-message {
+            display: none;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        #success-message h2 {
+            color: var(--success-color);
+            font-size: 24px;
+        }
+        #success-message .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+        
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div id="loading-overlay">
+    <div style="font-size: 20px; font-weight: bold;">Идет отправка...</div>
+</div>
+
+<div class="container">
+    <div id="quiz-content">
+        <h1>Тест: Внутреннее строение насекомых</h1>
+        
+        <form id="quizForm">
+            <div class="user-info">
+                <div class="input-group">
+                    <label for="fio">ФИО студента *</label>
+                    <input type="text" id="fio" name="fio" required placeholder="Введите ваше имя">
+                </div>
+                <div class="input-group">
+                    <label for="group">Группа *</label>
+                    <input type="text" id="group" name="group" required placeholder="Напр. Л-21">
+                </div>
+            </div>
+
+            <div id="questionsContainer"></div>
+
+            <button type="submit" id="submitBtn" class="btn-submit">Отправить ответы</button>
+        </form>
+    </div>
+
+    <!-- Блок, который появится после отправки -->
+    <div id="success-message">
+        <div class="icon">✅</div>
+        <h2>Спасибо! Ваши ответы приняты.</h2>
+        <p>Результаты теста успешно отправлены преподавателю.</p>
+        <p id="result-summary" style="font-weight: bold; font-size: 1.2em;"></p>
+        
+        <button class="btn-submit" style="background-color: #34495e; margin-top: 20px; max-width: 300px; margin-left: auto; margin-right: auto;" onclick="goToHome()">
+            Вернуться на главную
+        </button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "Какая система отвечает за доставку кислорода к тканям насекомых?", a: ["кровеносная", "пищеварительная", "дыхательная", "выделительная", "нервная"], c: 2 },
+        { q: "Основным органом дыхательной системы насекомых являются:", a: ["лёгкие", "жабры", "трахеи", "альвеолы", "бронхи"], c: 2 },
+        { q: "Через какие структуры воздух поступает в тело насекомого?", a: ["поры кожи", "трахеолы", "жабры", "дыхальца", "капилляры"], c: 3 },
+        { q: "Какая система не участвует в переносе кислорода у насекомых?", a: ["дыхательная", "нервная", "пищеварительная", "кровеносная", "выделительная"], c: 3 },
+        { q: "Пищеварительная система насекомых начинается с:", a: ["глотки", "ротовой полости", "зоба", "пищевода", "желудка"], c: 1 },
+        { q: "В каком отделе кишечника происходит основное переваривание пищи?", a: ["передняя кишка", "зоб", "средняя кишка", "задняя кишка", "мускульный желудок"], c: 2 },
+        { q: "Какую функцию выполняют слюнные железы?", a: ["выделительную", "дыхательную", "защитную", "пищеварительную", "кровеносную"], c: 3 },
+        { q: "Нервная система насекомых имеет тип:", a: ["трубчатый", "диффузный", "узловой", "лучистый", "сетчатый"], c: 2 },
+        { q: "Надглоточный ганглий выполняет функцию:", a: ["движения ног", "переваривания пищи", "дыхания", "управления поведением", "выделения"], c: 3 },
+        { q: "Брюшная нервная цепочка отвечает за:", a: ["дыхание", "кровообращение", "работу органов чувств", "движение и работу внутренних органов", "пищеварение"], c: 3 },
+        { q: "Кровеносная система насекомых является:", a: ["замкнутой", "полуоткрытой", "замкнуто-кольцевой", "незамкнутой", "отсутствующей"], c: 3 },
+        { q: "Как называется жидкость, циркулирующая в теле насекомых?", a: ["кровь", "лимфа", "плазма", "гемолимфа", "сыворотка"], c: 3 },
+        { q: "Основная функция гемолимфы:", a: ["перенос кислорода", "перенос питательных веществ", "дыхание", "фотосинтез", "газообмен"], c: 1 },
+        { q: "Главным органом кровеносной системы является:", a: ["лёгкое", "почка", "сердце", "желудок", "трахея"], c: 2 },
+        { q: "Основными органами выделительной системы насекомых являются:", a: ["почки", "нефридии", "потовые железы", "мальпигиевы сосуды", "печень"], c: 3 },
+        { q: "Куда открываются мальпигиевы сосуды?", a: ["в полость тела", "в трахеи", "в сердце", "в среднюю кишку", "в заднюю кишку"], c: 4 },
+        { q: "Основной продукт выделения у насекомых:", a: ["аммиак", "мочевина", "углекислый газ", "мочевая кислота", "вода"], c: 3 },
+        { q: "Какая система обеспечивает координацию движений?", a: ["дыхательная", "пищеварительная", "нервная", "кровеносная", "выделительная"], c: 2 },
+        { q: "Какая особенность характертерна для выделительной системы насекомых?", a: ["большое потребление воды", "отсутствие связи с кишечником", "экономия воды", "участие в дыхании", "перенос кислорода"], c: 2 },
+        { q: "Какая система тесно связана с выделительной системой?", a: ["дыхательная", "нервная", "кровеносная", "пищеварительная", "покровная"], c: 3 }
+    ];
+
+    const container = document.getElementById('questionsContainer');
+
+    questions.forEach((item, index) => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'question';
+        const qText = document.createElement('p');
+        qText.innerText = `${index + 1}. ${item.q}`;
+        qDiv.appendChild(qText);
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'options';
+        item.a.forEach((ans) => {
+            const label = document.createElement('label');
+            label.className = 'option';
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = `q${index}`;
+            radio.value = ans;
+            radio.required = true;
+            label.appendChild(radio);
+            label.appendChild(document.createTextNode(ans));
+            optionsDiv.appendChild(label);
+        });
+        qDiv.appendChild(optionsDiv);
+        container.appendChild(qDiv);
+    });
+
+    // Блокировка инструментов разработчика
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) return false;
+        if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false;
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
+    };
+
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxIQ5bFoTNgJmz7d9xz6IL9q3bQZaw3OBInIRoU9jzTSBPOeDYusc4iJD1F_qq1gA1jSw/exec'; // ЗАМЕНИТЕ НА ВАШ URL
+
+    document.getElementById('quizForm').onsubmit = function(e) {
+        e.preventDefault();
+        
+        // 1. Блокируем кнопку, чтобы не нажали дважды
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Отправка...";
+        
+        // 2. Показываем оверлей загрузки
+        document.getElementById('loading-overlay').style.display = 'flex';
+
+        const formData = new FormData(this);
+        const data = {};
+        formData.forEach((value, key) => { data[key] = value; });
+        
+        let score = 0;
+        questions.forEach((item, index) => {
+            if (data[`q${index}`] === item.a[item.c]) score++;
+        });
+        data.score = score;
+        data.total = questions.length;
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(() => {
+            // 3. ПРИ УСПЕХЕ: Скрываем весь тест и показываем "Спасибо"
+            document.getElementById('quiz-content').style.display = 'none';
+            document.getElementById('loading-overlay').style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+            document.getElementById('result-summary').innerText = `Ваш результат: ${score} из ${questions.length}`;
+        }).catch(err => {
+            console.error(err);
+            alert('Ошибка при отправке. Попробуйте еще раз.');
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Отправить ответы";
+            document.getElementById('loading-overlay').style.display = 'none';
+        });
+    };
+
+    function goToHome() {
+        // Переход на главную страницу index.html
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
