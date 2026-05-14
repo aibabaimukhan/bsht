@@ -1,782 +1,360 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Внутреннее строение насекомых</title>
-<style>
-/* ===== Root / Общие переменные ===== */
-:root {
-    --primary: #2d5a27;
-    --dark: #1a3c15;
-    --accent: #ffb703;
-    --bg: #0f1a11;
-    --text-light: #ffffff;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Внутреннее строение насекомых</title>
+    <style>
+        /* Основные стили страницы */
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; line-height: 1.6; color: #333; max-width: 1000px; margin: 0 auto; padding: 20px; background-color: #f0f2f5; }
+        header { background: #1a5276; color: #fff; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .section { background: #fff; padding: 25px; margin-bottom: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        h2 { color: #196f3d; border-bottom: 2px solid #2ecc71; padding-bottom: 10px; margin-top: 0; }
+        
+        /* Стили для игрового задания (Юный энтомолог) */
+        .hw-container { background: #fef9e7; border: 2px dashed #f39c12; padding: 25px; border-radius: 12px; }
+        .hw-item { margin-bottom: 20px; }
+        .term { font-weight: bold; color: #d35400; display: block; margin-bottom: 5px; }
+        .drop-zone { border-bottom: 2px solid #bdc3c7; min-height: 30px; padding: 8px; background: #fff; cursor: pointer; transition: 0.3s; border-radius: 4px; }
+        .drop-zone:empty::before { content: "Нажмите на вариант ниже..."; color: #999; font-style: italic; }
+        .answer-pool { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0; padding: 15px; background: #fff; border-radius: 8px; border: 1px solid #ddd; }
+        .draggable { background: #3498db; color: white; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 14px; user-select: none; transition: 0.2s; }
+        .draggable.used { opacity: 0.3; cursor: default; pointer-events: none; }
+        .correct { background-color: #d4efdf !important; border-color: #27ae60 !important; color: #196f3d; font-weight: bold; }
+        .wrong { background-color: #f9ebea !important; border-color: #c0392b !important; color: #922b21; }
 
-* {
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-}
+        /* Стили аккордеона для ТЕОРИИ */
+        .theory-accordion { margin-top: 20px; border-radius: 12px; overflow: hidden; border: 1px solid #e0e6ed; }
+        .accordion-item { border-bottom: 1px solid #e0e6ed; }
+        .accordion-header { background-color: #fff; padding: 18px 25px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: background 0.3s; font-weight: bold; color: #1a5276; }
+        .accordion-header:hover { background-color: #f8f9fa; }
+        .accordion-content { display: none; padding: 20px 25px; background-color: #ffffff; border-top: 1px solid #f0f2f5; }
+        .accordion-content.active { display: block; }
 
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: var(--bg);
-    color: var(--text-light);
-    overflow-x: hidden;
-}
+        /* Размещение текста и картинки РЯДОМ */
+        .theory-layout { display: flex; gap: 25px; align-items: flex-start; flex-wrap: wrap; }
+        .theory-text { flex: 1.5; min-width: 300px; }
+        .theory-image-container { flex: 1; min-width: 280px; max-width: 400px; background: #fdfdfd; border: 1px solid #eee; border-radius: 10px; padding: 10px; text-align: center; }
+        .theory-image-container img { width: 100%; height: 250px; object-fit: contain; background: #fafafa; border-radius: 5px; margin-bottom: 10px; }
+        .image-caption { font-size: 0.85em; color: #666; font-style: italic; }
 
-/* ===== Навигация ===== */
-nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    min-height: 70px;
-    background: rgba(0,0,0,0.85);
-    backdrop-filter: blur(10px);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-nav a {
-    color: white;
-    text-decoration: none;
-    margin: 8px 14px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: 0.3s;
-}
-
-nav a:hover {
-    color: var(--accent);
-}
-
-/* ===== Hero ===== */
-.hero {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    overflow: hidden;
-}
-
-/* Видео-фон */
-.hero-video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;          /* ниже canvas и контента */
-    filter: brightness(0.4);
-}
-
-
-#canvas-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(12px);
-    padding: 40px;
-    border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.2);
-    max-width: 800px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-.hero h1 {
-    font-size: 3rem;
-    margin: 0;
-    letter-spacing: 2px;
-}
-
-.hero p {
-    margin-top: 15px;
-    font-size: 1rem;
-}
-
-.btn {
-    margin-top: 30px;
-    padding: 15px 40px;
-    background: var(--accent);
-    color: var(--dark);
-    font-weight: bold;
-    text-decoration: none;
-    border-radius: 50px;
-    display: inline-block;
-    transition: 0.3s;
-    text-transform: uppercase;
-}
-
-.btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px var(--accent);
-}
-
-/* ===== Carousel Fullscreen ===== */
-.carousel-fullscreen {
-    width: 100vw;
-    height: 100vh;
-    background: #000;
-    position: relative;
-    overflow: hidden;
-}
-
-.carousel-wrapper {
-    width: 100%;
-    height: 100%;
-}
-
-.main-slide {
-    position: absolute;
-    inset: 0;
-    display: none;
-}
-
-.main-slide.active {
-    display: block;
-    animation: fadeInSlide 1s ease-in-out;
-}
-
-.main-slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.5);
-}
-
-/* Slide caption */
-.slide-caption {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    padding-left: 10%;
-}
-
-.caption-content {
-    max-width: 600px;
-    background: rgba(45, 90, 39, 0.85);
-    padding: 40px;
-    border-left: 8px solid var(--accent);
-    border-radius: 0 20px 20px 0;
-}
-
-.caption-content h2 {
-    font-size: 3rem;
-    margin: 0 0 20px;
-    color: var(--accent);
-}
-
-.caption-content p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-}
-
-/* Carousel buttons */
-.nav-control {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 3rem;
-    padding: 20px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
-    cursor: pointer;
-    z-index: 100;
-    transition: 0.3s;
-}
-
-.nav-control:hover {
-    background: var(--accent);
-    color: var(--dark);
-}
-
-.prev { left: 0; border-radius: 0 10px 10px 0; }
-.next { right: 0; border-radius: 10px 0 0 10px; }
-
-/* Slide dots */
-.slide-dots {
-    position: absolute;
-    bottom: 40px;
-    width: 100%;
-    text-align: center;
-}
-
-.dot {
-    width: 15px;
-    height: 15px;
-    margin: 0 10px;
-    background: rgba(255,255,255,0.3);
-    border-radius: 50%;
-    display: inline-block;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.dot.active {
-    background: var(--accent);
-    transform: scale(1.4);
-}
-
-/* ===== Master–Detail панель ===== */
-.detail-panel {
-    width: 100%;
-    min-height: 100vh;   /* ← главное */
-    display: flex;
-    background: var(--bg);
-    padding-top: 70px;   /* учитывает фиксированное меню */
-}
-
-
-.detail-content {
-    width: 80%;
-    padding: 60px;
-    overflow-y: auto;
-}
-
-.detail-item {
-    display: none;
-    animation: fadeDetail 0.4s ease;
-}
-
-.detail-item.active {
-    display: block;
-}
-
-.detail-item img {
-    width: 100%;
-    max-height: 420px;
-    object-fit: contain;
-    margin-bottom: 25px;
-    border-radius: 16px;
-}
-
-.detail-item h2 {
-    color: var(--accent);
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-}
-
-.detail-item p {
-    font-size: 1.2rem;
-    line-height: 1.6;
-}
-
-.detail-controls {
-    width: 20%;
-    background: var(--dark);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 30px;
-    gap: 15px;
-}
-
-.detail-btn {
-    padding: 16px;
-    font-size: 1rem;
-    background: transparent;
-    color: white;
-    border: 2px solid var(--accent);
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.detail-btn:hover,
-.detail-btn.active {
-    background: var(--accent);
-    color: var(--dark);
-}
-
-/* ===== Анимации ===== */
-@keyframes fadeInSlide {
-    from { opacity: 0; transform: scale(1.05); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-@keyframes fadeDetail {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-/* ===== Адаптив ===== */
-
-/* Планшеты и телефоны */
-@media (max-width: 1200px) {
-    .detail-content { padding: 50px; }
-    .detail-item h2 { font-size: 2.2rem; }
-    .detail-item p { font-size: 1.1rem; }
-}
-
-@media (max-width: 992px) {
-    .hero h1 { font-size: 2.2rem; }
-    .hero-content { padding: 30px; }
-    .caption-content { max-width: 80%; padding: 25px; border-left-width: 6px; }
-    .caption-content h2 { font-size: 2rem; }
-    .caption-content p { font-size: 1rem; }
-    .nav-control { font-size: 2.5rem; padding: 15px; }
-}
-
-@media (max-width: 768px) {
-    .hero h1 { font-size: 1.8rem; }
-    .hero-content { padding: 25px; }
-    .caption-content { max-width: 90%; padding: 20px; border-left-width: 5px; }
-    .caption-content h2 { font-size: 1.6rem; }
-    .caption-content p { font-size: 0.95rem; }
-    .nav-control { font-size: 2rem; padding: 12px; }
-    .detail-panel { flex-direction: column; }
-    .detail-content, .detail-controls { width: 100%; }
-    .detail-controls { flex-direction: row; justify-content: space-between; padding: 15px; position: sticky; bottom: 0; z-index: 10; }
-    .detail-btn { flex: 1; padding: 12px 6px; font-size: 0.85rem; }
-    .detail-item img { max-height: 260px; }
-}
-
-@media (max-width: 480px) {
-    .hero h1 { font-size: 1.4rem; }
-    .caption-content h2 { font-size: 1.3rem; }
-    .caption-content p { font-size: 0.85rem; }
-    .dot { width: 10px; height: 10px; margin: 0 6px; }
-    .detail-item h2 { font-size: 1.5rem; }
-    .detail-item p { font-size: 0.9rem; }
-    .detail-btn { font-size: 0.75rem; padding: 10px 4px; }
-}
-
-
-
-/* ===== Модальное окно ===== */
-.modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(6px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 3000;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background: linear-gradient(135deg, #1a3c15, #2d5a27);
-    padding: 40px;
-    border-radius: 24px;
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    animation: modalFade 0.4s ease;
-}
-
-.modal-content h2 {
-    color: var(--accent);
-    margin-bottom: 10px;
-}
-
-.modal-content p {
-    font-size: 1rem;
-    margin-bottom: 20px;
-}
-
-.modal-image {
-    width: 100%;
-    max-height: 260px;
-    object-fit: contain;
-    border-radius: 16px;
-    margin-bottom: 25px;
-    border: 2px solid rgba(255,255,255,0.2);
-}
-
-/* Крестик */
-.modal-close {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 2rem;
-    cursor: pointer;
-    color: white;
-    transition: 0.3s;
-}
-
-.modal-close:hover {
-    color: var(--accent);
-}
-
-/* Анимация */
-@keyframes modalFade {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-
-</style>
+        /* Кнопки и акценты */
+        .btn { background: #27ae60; color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-top: 10px; }
+        .btn:hover { background: #1e8449; }
+        .badge { padding: 2px 8px; border-radius: 10px; font-size: 0.85em; margin-right: 5px; background: #d6eaf8; color: #2e86c1; font-weight: bold; }
+        .highlight { color: #c0392b; font-weight: bold; }
+        textarea { width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #ccc; margin-top: 10px; font-family: inherit; }
+    </style>
 </head>
 <body>
 
-<nav>
-    <a href="#hero">Главная</a>
-    <a href="#digestive">Пищеварение</a>
-    <a href="#circulatory">Внутренние системы</a>
-    <a href="#" onclick="openTestModal()">Тест</a>
-    <a href="res.html">Результаты</a>
-    <a href="ref.html">Рефлексия</a>
-</nav>
+<header>
+    <h3>ГККП «Высший колледж лесного хозяйства, экологии и туризма»</h3>
+    <h1>Тема: Внутреннее строение тела насекомых</h1>
+    <p><strong>Педагог:</strong> Темирболатова А.Б.</p>
+</header>
 
-
-<!-- Hero -->
-<section class="hero" id="hero">
-
-    <!-- Canvas (если нужен эффект частиц) -->
-    <canvas id="canvas-bg"></canvas>
-
-    <!-- Видео-фон -->
-    <video class="hero-video" autoplay muted loop playsinline>
-        <source src="12.mp4" type="video/mp4">
-    </video>
-
-    <!-- Контент -->
-    <div class="hero-content">
-        <h1>Внутреннее строение тела насекомых</h1>
-        <p>
-            Учебный модуль дисциплины "Охрана и защита леса"<br>
-            Преподаватель: Темирболатова А.Б.
-        </p>
-        <a href="#digestive" class="btn">Начать изучение</a>
+<div class="section hw-container">
+    <h2>📊 Игровое задание: «Юный энтомолог»</h2>
+    <p><i>Сопоставьте разделы биологии с тем, что они изучают:</i></p>
+    
+    <div id="quiz-slots">
+        <div class="hw-item">
+            <span class="term">Энтомология:</span>
+            <div class="drop-zone" id="entomology" data-correct="def1" onclick="clearSlot('entomology')"></div>
+        </div>
+        <div class="hw-item">
+            <span class="term">Морфология:</span>
+            <div class="drop-zone" id="morphology" data-correct="def2" onclick="clearSlot('morphology')"></div>
+        </div>
+        <div class="hw-item">
+            <span class="term">Анатомия:</span>
+            <div class="drop-zone" id="anatomy" data-correct="def3" onclick="clearSlot('anatomy')"></div>
+        </div>
+        <div class="hw-item">
+            <span class="term">Физиология:</span>
+            <div class="drop-zone" id="physiology" data-correct="def4" onclick="clearSlot('physiology')"></div>
+        </div>
     </div>
 
-</section>
+    <div class="answer-pool" id="pool">
+        <div class="draggable" id="def1" onclick="assign('def1')">изучает насекомых, их развитие и роль в природе</div>
+        <div class="draggable" id="def4" onclick="assign('def4')">изучает функции органов и процессы жизнедеятельности</div>
+        <div class="draggable" id="def2" onclick="assign('def2')">изучает строение и расположение частей тела вредителей</div>
+        <div class="draggable" id="def3" onclick="assign('def3')">изучает внутреннее строение насекомых, их органы и системы</div>
+    </div>
+    
+    <button class="btn" onclick="checkAnswers()">Проверить ответы</button>
+    <button class="btn" style="background:#7f8c8d" onclick="resetQuiz()">Сбросить</button>
+    <span id="status-msg"></span>
+</div>
 
+<div class="section">
+    <h2>📖 Теория: Внутренние системы организма</h2>
+    <p>Нажмите на заголовок, чтобы открыть описание и схему системы:</p>
 
-
-<section class="carousel-fullscreen" id="digestive">
-    <div class="carousel-wrapper">
-        <div class="main-slide active">
-            <img src="img/1.jpg" alt="Передняя кишка">
-            <div class="slide-caption">
-                <div class="caption-content">
-                    <h2>01. Передняя кишка</h2>
-                    <p>Включает глотку, пищевод и зоб. Здесь происходит измельчение и первичная обработка пищи насекомого.</p>
-                </div>
-            </div>
-        </div>
+    <div class="theory-accordion">
         
-        <div class="main-slide">
-            <img src="img/2.png" alt="Средняя кишка">
-            <div class="slide-caption">
-                <div class="caption-content">
-                    <h2>02. Средняя кишка</h2>
-                    <p>Основной орган пищеварения, где происходит всасывание питательных веществ в организм. <i>Особенность:</i> отсутствует хитиновая выстилка.</p>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('digestive')">
+                <span>🍎 Пищеварительная система</span>
+                <span>▼</span>
+            </div>
+            <div id="digestive" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Обеспечивает приём пищи, её переваривание и всасывание питательных веществ.</p>
+                        <p><span class="badge">1. Передняя кишка</span> Ротовая полость, глотка, пищевод, зоб, мускульный желудок. (Механическая обработка).</p>
+                        <p><span class="badge">2. Средняя кишка</span> Основной отдел. Выделяет ферменты, происходит всасывание.</p>
+                        <p><span class="badge">3. Задняя кишка</span> Прямая кишка и анальное отверстие. (Всасывание воды).</p>
+                        <p><b>Слюнные железы:</b> смачивают пищу, могут выделять яд.</p>
+                    </div>
+                    <div class="theory-image-container">
+                        
+
+[Image of insect digestive system anatomy]
+
+                        <div class="image-caption">Схема строения пищеварительного тракта</div>
+                    </div>
                 </div>
             </div>
         </div>
-        
-        <div class="main-slide">
-            <img src="img/3.png" alt="Задняя кишка">
-            <div class="slide-caption">
-                <div class="caption-content">
-                    <h2>03. Задняя кишка</h2>
-                    <p>Подвздошная, прямая кишка, анальное отверстие. Функции: всасывание воды и формирование каловых масс.</p>
+
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('respiratory')">
+                <span>🌬️ Дыхательная система</span>
+                <span>▼</span>
+            </div>
+            <div id="respiratory" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Прямая доставка кислорода к клеткам через <b>трахейную систему</b>.</p>
+                        <ul>
+                            <li><b>Дыхальца (стигмы)</b> — отверстия по бокам тела.</li>
+                            <li><b>Трахеи</b> — разветвлённые трубки с хитином.</li>
+                            <li><b>Трахеолы</b> — мельчайшие веточки, доходящие до каждой клетки.</li>
+                        </ul>
+                        <p class="highlight">Кровеносная система НЕ участвует в переносе кислорода!</p>
+                    </div>
+                    <div class="theory-image-container">
+                        
+
+[Image of insect respiratory system and trachea]
+
+                        <div class="image-caption">Трахейная сеть и механизм дыхания</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <button class="nav-control prev" onclick="manualMove(-1)">&#10094;</button>
-        <button class="nav-control next" onclick="manualMove(1)">&#10095;</button>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('circulatory')">
+                <span>❤️ Кровеносная система</span>
+                <span>▼</span>
+            </div>
+            <div id="circulatory" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p><b>Незамкнутая.</b> Гемолимфа изливается в полость тела, омывая органы.</p>
+                        <p><span class="badge">Сердце</span> Продольный спинной сосуд, разделенный на камеры с клапанами.</p>
+                        <p><span class="badge">Гемолимфа</span> Переносит питательные вещества, гормоны и продукты обмена.</p>
+                        <p>Участвует в иммунной защите и терморегуляции.</p>
+                    </div>
+                    <div class="theory-image-container">
+                        
 
-        <div class="slide-dots">
-            <span class="dot active" onclick="goToSlide(0)"></span>
-            <span class="dot" onclick="goToSlide(1)"></span>
-            <span class="dot" onclick="goToSlide(2)"></span>
-        </div>
-    </div>
-</section>
+[Image of insect circulatory system diagram]
 
-
-<section class="detail-panel" id="circulatory">
-    <div class="detail-content">
-        <h1 align="center">Дополнительные органы</h1>
-
-        <div class="detail-item active">
-            <img src="img/1.jpg" alt="">
-            <h2>Слюнные железы</h2>
-            <p>
-                Cмачивают пищу, могут выделять ферменты или ядовитые вещества.
-            </p>
-        </div>
-
-        <div class="detail-item">
-            <img src="img/circulation2.jpg" alt="">
-            <h2>Симбиотические микроорганизмы</h2>
-            <p>
-                Симбиотические микроорганизмы — участвуют в переваривании растительной пищи (у некоторых видов). Пищеварительная система обеспечивает рост, развитие и выживание насекомых, отражая их приспособленность к различным условиям среды и источникам пищи.
-            </p>
+                        <div class="image-caption">Схема движения гемолимфы и сердца</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="detail-item">
-            <img src="img/circulation3.jpg" alt="">
-            <h2>Дыхательная система</h2>
-            <p>
-                Насекомые дышат с помощью трахейной системы, которая обеспечивает прямую доставку кислорода к органам и тканям, минуя кровеносную систему.<br><br>
-Строение дыхательной системы:<br>
-<i>Дыхальца (стигмы)</i> — отверстия на боках грудных и брюшных сегментов тела<br>
-<i>Трахеи</i> — разветвлённые трубочки, выстланные хитином <br>
-<i>Трахеолы</i> — мельчайшие ответвления трахей, контактирующие с клетками<br><br>
-Механизм дыхания:
-Воздух поступает через дыхальца, по трахеям и трахеолам кислород доставляется непосредственно к тканям. Удаление углекислого газа происходит тем же путём.
-Дыхание может усиливаться за счёт движений брюшка. <br><br>
-<b><i>Особенности дыхания насекомых</i></b> <br>
-1)	Кровеносная система не участвует в переносе кислорода <br>
-2)	Высокая эффективность газообмена <br>
-3)	Экономия воды (дыхальца могут закрываться) <br>
-4)	Приспособленность к наземному образу жизни. 
-            </p>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('nervous')">
+                <span>🧠 Нервная система</span>
+                <span>▼</span>
+            </div>
+            <div id="nervous" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Узловой тип. Обеспечивает координацию и связь с средой.</p>
+                        <p><b>Центральная система:</b></p>
+                        <ul>
+                            <li><b>Мозг (надглоточный ганглий)</b> — сложное поведение.</li>
+                            <li><b>Подглоточный ганглий</b> — ротовой аппарат.</li>
+                            <li><b>Брюшная нервная цепочка</b> — движения и органы.</li>
+                        </ul>
+                    </div>
+                    <div class="theory-image-container">
+                        
+
+[Image of insect nervous system diagram]
+
+                        <div class="image-caption">Центральная нервная система насекомого</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="detail-item">
-            <img src="img/4.jpg" alt="">
-            <h2>Кровеносная система</h2>
-            <p>
-                Кровеносная система насекомых незамкнутая, выполняет перенос питательных веществ, гормонов и продуктов обмена, но не участвует в доставке кислорода — за дыхание отвечает трахейная система.
-<br><br><b><i>Строение кровеносной системы</i></b><br>
-<b><i>Сердце</i></b> - продольный спинной сосуд, разделённый на камеры с клапанами,
-проталкивает гемолимфу вперёд по телу <br>
-<b><i>Аорта</i></b> - продолжение сердца в переднюю часть тела; обеспечивает движение гемолимфы к головным органам. <br>
-<b><i>Гемолимфа</i></b> - жидкость, аналогичная крови; переносит питательные вещества, гормоны, продукты обмена, участвует в иммунной защите, 
-не переносит кислород. <br><br>
-<b><i>Механизм движения гемолимфы</i></b><br>
-движение обеспечивается сердцем, мышцами тела и дыхательной активностью; 
-жидкость циркулирует в полости тела, омывая внутренние органы. <br><br>
-<i><u>Значение: </u></i>
-обеспечивает питание клеток и органов; <br>
-участвует в терморегуляции и иммунной защите; <br>
-позволяет насекомым сохранять активность при высоком уровне метаболизма. 
-
-            </p>
+        <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion('excretory')">
+                <span>♻️ Выделительная система</span>
+                <span>▼</span>
+            </div>
+            <div id="excretory" class="accordion-content">
+                <div class="theory-layout">
+                    <div class="theory-text">
+                        <p>Удаление продуктов обмена и баланс воды.</p>
+                        <p><span class="badge">Мальпигиевы сосуды</span> Тонкие трубочки, впадающие в кишечник. Извлекают мочевую кислоту из гемолимфы.</p>
+                        <p><span class="badge">Жировое тело</span> "Почка накопления", запас энергии.</p>
+                        <p>Вода частично возвращается в организм для экономии.</p>
+                    </div>
+                    <div class="theory-image-container">
+                        
+                        <div class="image-caption">Органы выделения и жировое тело</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="detail-item">
-            <img src="img/5.jpg" alt="">
-            <h2>Нервная система</h2>
-            <p>
-                Нервная система насекомых обеспечивает связь организма с окружающей средой, координацию движений и регуляцию работы внутренних органов.
-Нервная система имеет узловой (ганглионарный) тип и состоит из:  <br><br>
-
-<b><i>Центральная нервная система</i></b><br>
-<u><i>Надглоточный ганглий (мозг) </i></u> - регулирует деятельность органов чувств и сложные формы поведения <br>
-<u><i>Подглоточный ганглий </i></u> - контролирует движения ротовых частей и передних конечностей <br>  
-<u><i>Грудные и брюшные ганглии </i></u> - управляют движениями тела и конечностей <br><br>
-
-<b><i>Периферическая нервная система</i></b><br> нервы, отходящие от ганглиев,
-связывает центральную нервную систему с органами и мышцами.
-<br>
-<u><i>Висцеральная (вегетативная) нервная система</i></u> - регулирует работу внутренних органов и гладкой мускулатуры. Висцеральная (вегетативная) нервная система<br><br>
-
-
-            </p>
-        </div>
-
-        <div class="detail-item">
-            <img src="img/6.jpg" alt="">
-            <h2>Висцеральная (вегетативная) нервная система</h2>
-            <p>
-                <u><b>Мальпигиевы сосуды</b></u><br>
-                - тонкие трубочки, впадающие в задний отдел кишечника;<br>
-- погружены в полость тела и омываются гемолимфой; <br>
-- основной орган выделения. <br><br>
-
-<u><b>Жировое тело (задняя кишка)</b></u><br>
-- участвует в обратном всасывании воды и солей;<br>
-- способствует образованию сухих экскрементов.
-<br><br>
-
-<u><b>Механизм выделения</b></u><br>
-продукты обмена (в основном мочевая кислота) поступают из гемолимфы в мальпигиевы сосуды;
-далее они попадают в кишечник и выводятся наружу вместе с каловыми массами;
-вода частично возвращается в организм.
-
-
-            </p>
-        </div>
-
-    </div>
-
-    <div class="detail-controls">
-        <button class="detail-btn active" onclick="switchDetail(0)">Слюнные железы</button>
-        <button class="detail-btn" onclick="switchDetail(1)">Симбиотические микроорганизмы</button>
-        <button class="detail-btn" onclick="switchDetail(2)">Дыхательная система</button>
-        <button class="detail-btn" onclick="switchDetail(3)">Кровеносная система</button>
-        <button class="detail-btn" onclick="switchDetail(4)">Нервная система</button>
-        <button class="detail-btn" onclick="switchDetail(5)">Висцеральная (вегетативная) нервная система</button>
-    </div>
-</section>
-
-
-
-<!-- ===== Модальное окно теста ===== -->
-<div class="modal" id="testModal">
-    <div class="modal-content">
-        <span class="modal-close" onclick="closeTestModal()">×</span>
-
-        <h2>Проверка знаний</h2>
-        <p>Отсканируйте изображение или нажмите кнопку ниже для перехода к тесту</p>
-
-        <!-- СЮДА СТАВИШЬ СВОЁ ФОТО -->
-        <img src="8c487dbf907b0ea9db425b4d34e7628e.png" alt="Тест" class="modal-image">
-
-        <a href="quiz.html" class="btn" target="_blank">Перейти к тесту</a>
     </div>
 </div>
 
+<div class="section" style="text-align: center; background: #ebf5fb; border: 2px solid #3498db;">
+    <h2>🎯 Закрепление материала</h2>
+    <p>Вы изучили внутреннее строение насекомых. Готовы проверить свои знания?</p>
+    <button class="btn" style="background: #3498db; font-size: 1.2em; padding: 15px 40px;" onclick="goToTest()">
+        Пройти тест
+    </button>
+</div>
 
+<div class="section">
+    <h2>🌱 Рефлексия</h2>
+    <p>Насколько успешно вы справились с задачами урока?</p>
+    
+    <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+        <input type="text" id="refl-fio" placeholder="Ваше ФИО" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1;">
+        <input type="text" id="refl-group" placeholder="Группа" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 100px;">
+    </div>
 
+    <textarea id="reflection-text" placeholder="Напишите, что вы узнали нового или что показалось сложным..."></textarea>
+    <br>
+    <button id="refl-btn" class="btn" style="background: #34495e;" onclick="sendReflection()">Завершить урок</button>
+    <span id="refl-status"></span>
+</div>
 
 <script>
-// --- Canvas фон с частицами ---
-const canvas = document.getElementById('canvas-bg');
-const ctx = canvas.getContext('2d');
-let particles = [];
 
-function initParticles() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    particles = [];
-    for (let i = 0; i < 80; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            vx: (Math.random() - 0.5) * 1.5,
-            vy: (Math.random() - 0.5) * 1.5,
-            size: Math.random() * 2 + 1
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLrytzhyRd5CZG2nE3XM2Cia972Xs0aCIXBoB-n-Or2usLpM6y9qpHyVfRZGKrJK5yRw/exec'; // ВСТАВЬТЕ СЮДА ВАШ URL
+
+    function sendReflection() {
+        const btn = document.getElementById('refl-btn');
+        const text = document.getElementById('reflection-text').value;
+        const fio = document.getElementById('refl-fio').value;
+        const group = document.getElementById('refl-group').value;
+        const status = document.getElementById('refl-status');
+
+        if (!text || !fio) {
+            alert("Пожалуйста, введите ФИО и текст рефлексии.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "Отправка...";
+
+        const data = {
+            type: "reflection", // Флаг, чтобы скрипт понял, что это рефлексия
+            fio: fio,
+            group: group,
+            reflection: text
+        };
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(() => {
+            alert('Спасибо! Ваша рефлексия сохранена.');
+            status.innerText = " ✅ Отправлено";
+            btn.innerText = "Завершено";
+        }).catch(err => {
+            console.error(err);
+            alert('Ошибка при отправке.');
+            btn.disabled = false;
+            btn.innerText = "Завершить урок";
         });
     }
-}
 
-function drawParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(255,255,255,0.5)';
-    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
 
-    particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
 
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    function goToTest() {
+        // Укажите здесь путь к вашему второму файлу
+        window.location.href = "test.html"; 
+    }
+    // 1. Управление аккордеоном
+    function toggleAccordion(id) {
+        const content = document.getElementById(id);
+        const isActive = content.classList.contains('active');
+        
+        // Закрываем все открытые блоки
+        document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('active'));
+        
+        // Если блок был закрыт - открываем
+        if (!isActive) content.classList.add('active');
+    }
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fill();
-
-        for (let j = i + 1; j < particles.length; j++) {
-            const p2 = particles[j];
-            const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-            if (dist < 150) {
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(p2.x, p2.y);
-                ctx.stroke();
+    // 2. Логика теста "Юный энтомолог"
+    function assign(defId) {
+        const slots = document.querySelectorAll('.drop-zone');
+        const defEl = document.getElementById(defId);
+        
+        for (let slot of slots) {
+            if (!slot.innerText) {
+                slot.innerText = defEl.innerText;
+                slot.setAttribute('data-current-def', defId);
+                defEl.classList.add('used');
+                break;
             }
         }
-    });
-
-    requestAnimationFrame(drawParticles);
-}
-
-
-let slideIndex = 0;
-const slides = document.querySelectorAll('.main-slide');
-const dots = document.querySelectorAll('.dot');
-const timerDuration = 5 * 60 * 1000; // 5 минут
-
-function showActiveSlide(n) {
-    slides.forEach(s => s.classList.remove('active'));
-    dots.forEach(d => d.classList.remove('active'));
-    
-    slideIndex = (n + slides.length) % slides.length;
-    
-    slides[slideIndex].classList.add('active');
-    dots[slideIndex].classList.add('active');
-}
-
-function manualMove(n) {
-    showActiveSlide(slideIndex + n);
-    resetSlideTimer();
-}
-
-function goToSlide(n) {
-    showActiveSlide(n);
-    resetSlideTimer();
-}
-
-// Автоматика
-let autoTimer = setInterval(() => showActiveSlide(slideIndex + 1), timerDuration);
-
-function resetSlideTimer() {
-    clearInterval(autoTimer);
-    autoTimer = setInterval(() => showActiveSlide(slideIndex + 1), timerDuration);
-}
-
-
-
-
-const detailItems = document.querySelectorAll('.detail-item');
-const detailButtons = document.querySelectorAll('.detail-btn');
-
-function switchDetail(index) {
-    detailItems.forEach(i => i.classList.remove('active'));
-    detailButtons.forEach(b => b.classList.remove('active'));
-
-    detailItems[index].classList.add('active');
-    detailButtons[index].classList.add('active');
-}
-
-
-function openTestModal() {
-    document.getElementById('testModal').classList.add('active');
-}
-
-function closeTestModal() {
-    document.getElementById('testModal').classList.remove('active');
-}
-
-// Закрытие по клику вне окна
-document.getElementById('testModal').addEventListener('click', function (e) {
-    if (e.target === this) {
-        closeTestModal();
     }
-});
 
+    function clearSlot(slotId) {
+        const slot = document.getElementById(slotId);
+        const defId = slot.getAttribute('data-current-def');
+        if (defId) {
+            document.getElementById(defId).classList.remove('used');
+            slot.innerText = "";
+            slot.removeAttribute('data-current-def');
+            slot.className = 'drop-zone';
+        }
+    }
 
+    function checkAnswers() {
+        const slots = document.querySelectorAll('.drop-zone');
+        let errors = 0;
+        slots.forEach(slot => {
+            const current = slot.getAttribute('data-current-def');
+            const correct = slot.getAttribute('data-correct');
+            if (current === correct) {
+                slot.className = 'drop-zone correct';
+            } else if (current) {
+                slot.className = 'drop-zone wrong';
+                errors++;
+            }
+        });
+        const msg = document.getElementById('status-msg');
+        msg.innerText = errors === 0 ? "✅ Все верно!" : `❌ Ошибок: ${errors}`;
+        msg.style.color = errors === 0 ? "green" : "red";
+    }
+
+    function resetQuiz() {
+        location.reload();
+    }
 </script>
 
 </body>
 </html>
-
-
-
