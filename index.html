@@ -233,12 +233,63 @@
 <div class="section">
     <h2>🌱 Рефлексия</h2>
     <p>Насколько успешно вы справились с задачами урока?</p>
+    
+    <div style="margin-bottom: 15px; display: flex; gap: 10px;">
+        <input type="text" id="refl-fio" placeholder="Ваше ФИО" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1;">
+        <input type="text" id="refl-group" placeholder="Группа" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 100px;">
+    </div>
+
     <textarea id="reflection-text" placeholder="Напишите, что вы узнали нового или что показалось сложным..."></textarea>
     <br>
-    <button class="btn" style="background: #34495e;" onclick="alert('Спасибо! Ваш ответ сохранен.')">Завершить урок</button>
+    <button id="refl-btn" class="btn" style="background: #34495e;" onclick="sendReflection()">Завершить урок</button>
+    <span id="refl-status"></span>
 </div>
 
 <script>
+
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLrytzhyRd5CZG2nE3XM2Cia972Xs0aCIXBoB-n-Or2usLpM6y9qpHyVfRZGKrJK5yRw/exec'; // ВСТАВЬТЕ СЮДА ВАШ URL
+
+    function sendReflection() {
+        const btn = document.getElementById('refl-btn');
+        const text = document.getElementById('reflection-text').value;
+        const fio = document.getElementById('refl-fio').value;
+        const group = document.getElementById('refl-group').value;
+        const status = document.getElementById('refl-status');
+
+        if (!text || !fio) {
+            alert("Пожалуйста, введите ФИО и текст рефлексии.");
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerText = "Отправка...";
+
+        const data = {
+            type: "reflection", // Флаг, чтобы скрипт понял, что это рефлексия
+            fio: fio,
+            group: group,
+            reflection: text
+        };
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(() => {
+            alert('Спасибо! Ваша рефлексия сохранена.');
+            status.innerText = " ✅ Отправлено";
+            btn.innerText = "Завершено";
+        }).catch(err => {
+            console.error(err);
+            alert('Ошибка при отправке.');
+            btn.disabled = false;
+            btn.innerText = "Завершить урок";
+        });
+    }
+
+
 
     function goToTest() {
         // Укажите здесь путь к вашему второму файлу
