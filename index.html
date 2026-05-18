@@ -3,1680 +3,611 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Энтомология | Внутреннее строение насекомых</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>Биология — Внутреннее строение тела насекомых</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;900&family=Mulish:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #020b14;
-    --surface: #061624;
-    --card: #0a1f30;
-    --accent1: #00d4ff;
-    --accent2: #00ff9d;
-    --accent3: #ff6b35;
-    --accent4: #c77dff;
-    --text: #cfe8f5;
-    --muted: #6a99b8;
-    --glow1: rgba(0,212,255,0.3);
-    --glow2: rgba(0,255,157,0.3);
-    --border: rgba(0,212,255,0.2);
+    --green-dark: #1a3a1a;
+    --green-main: #2d6a2d;
+    --green-mid: #4a8c4a;
+    --green-light: #7ab87a;
+    --green-pale: #c8e6c8;
+    --green-bg: #f0f7f0;
+    --accent: #5cb85c;
+    --text-dark: #1a2a1a;
+    --text-mid: #3a5a3a;
+    --text-light: #6a8a6a;
+    --white: #fff;
+    --card-shadow: 0 8px 32px rgba(30,80,30,0.13);
   }
-
-  * { margin:0; padding:0; box-sizing:border-box; }
-
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
+  body { font-family: 'Mulish', sans-serif; background: var(--green-bg); color: var(--text-dark); overflow-x: hidden; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Exo 2', sans-serif;
-    overflow-x: hidden;
-    cursor: default;
-  }
-
-  /* STARFIELD */
-  #stars {
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    z-index:0;
-    pointer-events:none;
-  }
-
-  /* GRID OVERLAY */
-  body::before {
-    content:'';
-    position:fixed;
-    top:0; left:0; width:100%; height:100%;
-    background:
-      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    z-index:0;
-    pointer-events:none;
-  }
-
-  /* NAV */
+  /* ===== NAV ===== */
   nav {
-    position: fixed;
-    top:0; left:0; right:0;
-    z-index:100;
-    background: rgba(2,11,20,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    height:60px;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 5vw; height: 64px;
+    background: rgba(26,58,26,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-  .nav-logo {
-    font-family:'Orbitron',monospace;
-    font-size:1rem;
-    color:var(--accent1);
-    letter-spacing:3px;
-    text-shadow: 0 0 20px var(--accent1);
-  }
-  .nav-links {
-    display:flex; gap:1.5rem; list-style:none;
-  }
-  .nav-links a {
-    color:var(--muted);
-    text-decoration:none;
-    font-size:0.8rem;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    transition:color 0.3s;
-    font-family:'Orbitron',monospace;
-  }
-  .nav-links a:hover { color:var(--accent1); text-shadow:0 0 10px var(--accent1); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; color: var(--white); font-family: 'Unbounded', sans-serif; font-size: 1rem; font-weight: 700; text-decoration: none; }
+  .nav-logo span { font-size: 1.5rem; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { color: rgba(255,255,255,0.82); font-size: 0.9rem; text-decoration: none; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover { color: var(--green-pale); }
 
-  /* SECTIONS */
-  section {
-    position:relative;
-    z-index:1;
-    min-height:100vh;
-    padding: 100px 2rem 4rem;
-    max-width: 1200px;
-    margin: 0 auto;
+  /* ===== HERO with VIDEO ===== */
+  .hero {
+    position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: flex-start;
+    overflow: hidden; padding: 0 10vw;
   }
-
-  /* HERO */
-  #hero {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    min-height:100vh;
-    padding-top:60px;
-    max-width:100%;
+  .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  .hero-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(120deg, rgba(20,50,20,0.82) 0%, rgba(30,70,30,0.55) 60%, rgba(0,0,0,0.1) 100%);
   }
-
-  .hero-eyebrow {
-    font-family:'Share Tech Mono',monospace;
-    color:var(--accent2);
-    font-size:0.8rem;
-    letter-spacing:5px;
-    text-transform:uppercase;
-    margin-bottom:1.5rem;
-    animation: fadeSlideDown 1s ease both;
+  .hero-content { position: relative; z-index: 2; max-width: 680px; animation: fadeUp .9s ease both; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(92,184,92,0.25); border: 1px solid rgba(92,184,92,0.5);
+    color: var(--green-pale); font-size: 0.75rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 50px; margin-bottom: 24px;
   }
-
-  .hero-title {
-    font-family:'Orbitron',monospace;
-    font-size: clamp(2rem,6vw,5rem);
-    font-weight:900;
-    line-height:1.1;
-    margin-bottom:1rem;
-    animation: fadeSlideDown 1s 0.2s ease both;
-  }
-  .hero-title span {
-    display:block;
-    background: linear-gradient(135deg, var(--accent1), var(--accent4));
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-    text-shadow:none;
-    filter: drop-shadow(0 0 40px rgba(0,212,255,0.5));
-  }
-
-  .hero-sub {
-    font-size:1.1rem;
-    color:var(--muted);
-    max-width:600px;
-    line-height:1.8;
-    margin-bottom:3rem;
-    animation: fadeSlideDown 1s 0.4s ease both;
-  }
-
-  .hero-buttons {
-    display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;
-    animation: fadeSlideDown 1s 0.6s ease both;
-  }
-
-  .btn {
-    padding:0.8rem 2rem;
-    font-family:'Orbitron',monospace;
-    font-size:0.8rem;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    border:none;
-    cursor:pointer;
-    text-decoration:none;
-    display:inline-block;
-    position:relative;
-    overflow:hidden;
-    transition:all 0.3s;
-  }
+  .hero h1 { font-family: 'Unbounded', sans-serif; font-size: clamp(2rem,5vw,4rem); font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 20px; }
+  .hero p { font-size: 1.15rem; color: rgba(255,255,255,0.78); margin-bottom: 36px; line-height: 1.7; }
   .btn-primary {
-    background: linear-gradient(135deg, var(--accent1), #006fff);
-    color:#000;
-    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    display: inline-block; padding: 14px 36px; background: var(--accent); color: #fff;
+    font-family: 'Unbounded', sans-serif; font-size: 0.85rem; font-weight: 700; border-radius: 8px;
+    text-decoration: none; transition: background .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 24px rgba(92,184,92,0.35);
   }
-  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 10px 40px var(--glow1); }
-  .btn-outline {
-    background: transparent;
-    color: var(--accent2);
-    border: 1px solid var(--accent2);
-    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
-  }
-  .btn-outline:hover { background:var(--accent2); color:#000; box-shadow:0 10px 40px var(--glow2); }
+  .btn-primary:hover { background: var(--green-mid); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(92,184,92,0.45); }
 
-  /* 3D INSECT CANVAS */
-  .hero-visual {
-    margin-top:3rem;
-    animation: fadeSlideDown 1s 0.8s ease both;
+  /* hero scroll hint */
+  .scroll-hint {
+    position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 8px; color: rgba(255,255,255,0.5); font-size: 0.75rem;
+    animation: bounce 2s infinite;
   }
+  .scroll-hint svg { width: 24px; height: 24px; }
 
-  /* SECTION HEADER */
-  .section-header {
-    text-align:center;
-    margin-bottom:3rem;
-  }
-  .section-tag {
-    font-family:'Share Tech Mono',monospace;
-    color:var(--accent2);
-    font-size:0.75rem;
-    letter-spacing:5px;
-    text-transform:uppercase;
-    margin-bottom:0.75rem;
-    display:block;
-  }
-  .section-title {
-    font-family:'Orbitron',monospace;
-    font-size: clamp(1.5rem,4vw,2.8rem);
-    font-weight:700;
-    color:var(--text);
-  }
-  .section-title span {
-    color:var(--accent1);
-    text-shadow:0 0 20px var(--accent1);
-  }
-  .section-line {
-    width:80px; height:2px;
-    background:linear-gradient(90deg, transparent, var(--accent1), transparent);
-    margin:1rem auto 0;
-  }
+  /* ===== SECTIONS GENERAL ===== */
+  section { padding: 80px 5vw; }
+  .section-title { font-family: 'Unbounded', sans-serif; font-size: clamp(1.4rem,3vw,2rem); font-weight: 800; color: var(--green-dark); margin-bottom: 10px; }
+  .section-subtitle { color: var(--text-light); font-size: 1rem; margin-bottom: 40px; }
 
-  /* QUIZ / ПРОВЕРКА */
-  .quiz-grid {
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
-    gap:1.5rem;
-  }
-  .quiz-card {
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:1.5rem;
-    position:relative;
-    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-    transition:border-color 0.3s, box-shadow 0.3s;
-  }
-  .quiz-card:hover { border-color:var(--accent1); box-shadow:0 0 30px var(--glow1); }
-  .quiz-card .q-label {
-    font-family:'Share Tech Mono',monospace;
-    font-size:0.7rem;
-    color:var(--accent1);
-    letter-spacing:3px;
-    margin-bottom:0.75rem;
-  }
-  .quiz-card .q-text {
-    font-size:0.95rem;
-    color:var(--text);
-    font-weight:600;
-    margin-bottom:1rem;
-    line-height:1.5;
-  }
-  .quiz-options { display:flex; flex-direction:column; gap:0.5rem; }
-  .quiz-option {
-    background:var(--surface);
-    border:1px solid rgba(0,212,255,0.1);
-    color:var(--muted);
-    padding:0.6rem 1rem;
-    font-size:0.85rem;
-    cursor:pointer;
-    transition:all 0.2s;
-    text-align:left;
-    font-family:'Exo 2',sans-serif;
-    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-  }
-  .quiz-option:hover { border-color:var(--accent1); color:var(--accent1); background:rgba(0,212,255,0.05); }
-  .quiz-option.correct { background:rgba(0,255,157,0.15); border-color:var(--accent2); color:var(--accent2); }
-  .quiz-option.wrong { background:rgba(255,107,53,0.15); border-color:var(--accent3); color:var(--accent3); }
-  .quiz-feedback { margin-top:0.75rem; font-size:0.82rem; display:none; padding:0.5rem; }
-  .quiz-feedback.show { display:block; }
-  .quiz-feedback.ok { color:var(--accent2); }
-  .quiz-feedback.err { color:var(--accent3); }
+  /* ===== DZ SECTION ===== */
+  #dz { background: #fff; }
+  .dz-header { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+  .dz-icon { width: 52px; height: 52px; background: var(--green-pale); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+  .dz-meta { }
+  .dz-meta h2 { font-family: 'Unbounded', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--green-dark); }
+  .dz-meta p { color: var(--text-light); font-size: 0.9rem; margin-top: 4px; }
 
-  .quiz-score-bar {
-    display:flex; align-items:center; justify-content:center;
-    gap:1.5rem; margin-bottom:2rem;
-    flex-wrap:wrap;
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; margin-bottom: 32px; }
+  .flip-card { height: 200px; perspective: 1200px; cursor: pointer; }
+  .flip-card-inner {
+    position: relative; width: 100%; height: 100%; transition: transform .55s cubic-bezier(.4,2,.5,1);
+    transform-style: preserve-3d;
   }
-  .score-chip {
-    font-family:'Orbitron',monospace;
-    font-size:1.5rem;
-    color:var(--accent1);
-    text-shadow:0 0 20px var(--accent1);
+  .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+  .flip-face, .flip-back {
+    position: absolute; inset: 0; backface-visibility: hidden; border-radius: 16px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    padding: 24px; text-align: center; box-shadow: var(--card-shadow);
   }
-  .score-label { font-size:0.8rem; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+  .flip-face { background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 100%); color: #fff; }
+  .flip-face .q-num { font-family: 'Unbounded', sans-serif; font-size: 2.5rem; font-weight: 900; color: var(--green-pale); opacity: .4; position: absolute; top: 12px; right: 18px; }
+  .flip-face .q-text { font-size: 1rem; font-weight: 600; line-height: 1.5; position: relative; z-index: 1; }
+  .flip-face .hint { margin-top: 12px; font-size: 0.75rem; color: rgba(255,255,255,.55); }
+  .flip-back { background: var(--green-pale); color: var(--green-dark); transform: rotateY(180deg); }
+  .flip-back .a-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; color: var(--green-mid); margin-bottom: 8px; }
+  .flip-back .a-text { font-size: 0.92rem; line-height: 1.6; }
 
-  /* THEORY CARDS */
-  .theory-tabs {
-    display:flex; gap:0.5rem; margin-bottom:2rem; flex-wrap:wrap; justify-content:center;
+  .dz-controls { display: flex; gap: 12px; }
+  .btn-reset {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px;
+    background: transparent; border: 2px solid var(--green-light); color: var(--green-main);
+    border-radius: 8px; font-family: 'Mulish', sans-serif; font-size: 0.88rem; font-weight: 700;
+    cursor: pointer; transition: background .2s, color .2s;
   }
+  .btn-reset:hover { background: var(--green-pale); }
+
+  /* ===== THEORY SECTION ===== */
+  #theory { background: var(--green-bg); }
+  .tabs-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px; }
   .tab-btn {
-    background:var(--surface);
-    border:1px solid var(--border);
-    color:var(--muted);
-    padding:0.5rem 1.2rem;
-    font-family:'Orbitron',monospace;
-    font-size:0.7rem;
-    letter-spacing:1px;
-    cursor:pointer;
-    transition:all 0.2s;
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    padding: 9px 22px; border: 2px solid var(--green-pale); border-radius: 50px;
+    background: transparent; font-family: 'Mulish', sans-serif; font-size: 0.88rem; font-weight: 700;
+    color: var(--text-mid); cursor: pointer; transition: all .2s;
   }
-  .tab-btn.active, .tab-btn:hover {
-    background:var(--accent1);
-    color:#000;
-    border-color:var(--accent1);
-    box-shadow:0 0 20px var(--glow1);
+  .tab-btn.active, .tab-btn:hover { background: var(--green-main); border-color: var(--green-main); color: #fff; }
+
+  .tab-panel { display: none; animation: fadeUp .4s ease both; }
+  .tab-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .tab-text h3 { font-family: 'Unbounded', sans-serif; font-size: 1.2rem; color: var(--green-dark); margin-bottom: 14px; }
+  .tab-text p { font-size: 0.96rem; line-height: 1.8; color: var(--text-mid); margin-bottom: 14px; }
+  .tab-text ul { padding-left: 1.2em; }
+  .tab-text li { font-size: 0.94rem; line-height: 1.8; color: var(--text-mid); margin-bottom: 6px; }
+  .tab-text .sub-section { margin-top: 18px; }
+  .tab-text .sub-section h4 { font-weight: 700; color: var(--green-main); margin-bottom: 6px; font-size: 0.95rem; }
+  .tab-media { display: flex; flex-direction: column; gap: 16px; }
+  .tab-media img {
+    width: 100%; border-radius: 14px; box-shadow: var(--card-shadow);
+    object-fit: cover; transition: transform .3s;
+  }
+  .tab-media img:hover { transform: scale(1.02); }
+  .tab-media video { width: 100%; border-radius: 14px; box-shadow: var(--card-shadow); }
+
+  @media (max-width: 768px) {
+    .tab-panel.active { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
   }
 
-  .theory-panel { display:none; }
-  .theory-panel.active { display:block; animation:fadeIn 0.4s ease; }
+  /* ===== QR SECTION ===== */
+  #qr-section {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 100%);
+    padding: 60px 5vw;
+  }
+  .qr-inner { display: flex; align-items: center; gap: 48px; max-width: 700px; margin: 0 auto; }
+  .qr-box {
+    width: 160px; height: 160px; background: #fff; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  .qr-box img { width: 140px; height: 140px; }
+  .qr-content h2 { font-family: 'Unbounded', sans-serif; font-size: 1.5rem; color: #fff; margin-bottom: 10px; }
+  .qr-content p { color: rgba(255,255,255,.75); margin-bottom: 20px; line-height: 1.6; }
+  .btn-white {
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px;
+    background: #fff; color: var(--green-dark); border-radius: 8px;
+    font-family: 'Unbounded', sans-serif; font-size: 0.82rem; font-weight: 700;
+    text-decoration: none; transition: background .2s, transform .15s;
+  }
+  .btn-white:hover { background: var(--green-pale); transform: translateY(-2px); }
 
-  .theory-body {
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:2rem;
-    align-items:start;
+  /* ===== REFLECTION ===== */
+  #reflection { background: #fff; text-align: center; }
+  .emoji-row { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin: 32px 0; }
+  .emoji-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    background: transparent; border: 3px solid var(--green-pale); border-radius: 16px;
+    padding: 18px 24px; cursor: pointer; transition: all .22s;
+    font-family: 'Mulish', sans-serif; font-size: 0.85rem; color: var(--text-mid); font-weight: 600;
   }
-  @media(max-width:768px){ .theory-body { grid-template-columns:1fr; } }
+  .emoji-btn .emoji { font-size: 2.8rem; line-height: 1; transition: transform .2s; }
+  .emoji-btn:hover { border-color: var(--green-mid); background: var(--green-bg); }
+  .emoji-btn:hover .emoji { transform: scale(1.2) rotate(-5deg); }
+  .emoji-btn.selected { border-color: var(--green-main); background: var(--green-pale); color: var(--green-dark); }
+  .emoji-btn.selected .emoji { transform: scale(1.3); animation: pop .3s ease; }
 
-  .theory-text h3 {
-    font-family:'Orbitron',monospace;
-    font-size:1rem;
-    color:var(--accent1);
-    margin-bottom:1rem;
-    text-shadow:0 0 10px var(--accent1);
-  }
-  .theory-text p {
-    font-size:0.9rem;
-    line-height:1.8;
-    color:var(--text);
-    margin-bottom:0.8rem;
-  }
-  .theory-text ul {
-    list-style:none;
-    padding:0;
-    margin-bottom:0.8rem;
-  }
-  .theory-text ul li {
-    font-size:0.88rem;
-    line-height:1.7;
-    color:var(--text);
-    padding-left:1.2rem;
-    position:relative;
-    margin-bottom:0.3rem;
-  }
-  .theory-text ul li::before {
-    content:'▶';
-    position:absolute; left:0;
-    color:var(--accent1);
-    font-size:0.6rem;
-    top:0.3rem;
-  }
+  .reflection-chart { margin: 36px auto 0; max-width: 600px; }
+  .chart-title { font-family: 'Unbounded', sans-serif; font-size: 1rem; color: var(--green-dark); margin-bottom: 20px; }
+  .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .bar-label { width: 130px; text-align: right; font-size: 0.85rem; color: var(--text-mid); flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--green-bg); border-radius: 50px; height: 22px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 50px; transition: width .6s cubic-bezier(.4,2,.5,1); display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; }
+  .bar-fill span { font-size: 0.75rem; font-weight: 700; color: #fff; }
+  .reflection-controls { display: flex; justify-content: center; gap: 12px; margin-top: 28px; }
 
-  .info-badge {
-    display:inline-block;
-    background:rgba(0,212,255,0.1);
-    border:1px solid var(--accent1);
-    color:var(--accent1);
-    font-family:'Share Tech Mono',monospace;
-    font-size:0.7rem;
-    padding:0.2rem 0.6rem;
-    letter-spacing:2px;
-    margin-bottom:0.6rem;
+  /* ===== АНИМИРОВАННАЯ И ЧИТАЕМАЯ ШКАЛА ===== */
+  .bar-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 16px; 
+    margin-bottom: 18px; 
   }
+  .bar-label { 
+    width: 140px; 
+    text-align: right; 
+    font-size: 0.9rem; 
+    color: var(--text-mid); 
+    font-weight: 600; 
+    flex-shrink: 0; 
+  }
+  .bar-track { 
+    flex: 1; 
+    background: rgba(45, 106, 45, 0.08); 
+    border-radius: 50px; 
+    height: 28px; 
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .bar-fill { 
+    height: 100%; 
+    border-radius: 50px; 
+    /* Плавное нарастание шкалы при голосовании */
+    transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1); 
+    display: flex; 
+    align-items: center; 
+    justify-content: flex-end; 
+    position: relative;
+    /* Красивый эффект бегущей сияющей волны */
+    background-image: linear-gradient(
+      45deg, 
+      rgba(255,255,255,0.15) 25%, 
+      transparent 25%, 
+      transparent 50%, 
+      rgba(255,255,255,0.15) 50%, 
+      rgba(255,255,255,0.15) 75%, 
+      transparent 75%, 
+      transparent
+    );
+    background-size: 40px 40px;
+    animation: move-stripes 2s linear infinite;
+    box-shadow: inset 0 -4px 10px rgba(0,0,0,0.1), 0 4px 12px rgba(0,0,0,0.05);
+  }
+  
+  /* Текст теперь позиционируется поверх шкалы, гарантируя 100% читаемость */
+  .bar-text {
+    position: absolute;
+    left: 14px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 5;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+  }
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-10px); } }
+  @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1.3); } }
 
-  /* 3D DIAGRAM */
-  .system-diagram {
-    position:relative;
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:1.5rem;
-    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  @keyframes move-stripes {
+    from { background-position: 0 0; }
+    to { background-position: 40px 0; }
   }
-
-  /* SVG Insect diagrams */
-  .diagram-svg {
-    width:100%;
-    height:auto;
-    filter: drop-shadow(0 0 15px rgba(0,212,255,0.3));
-  }
-
-  /* TASKS */
-  .tasks-grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:1.5rem;
-  }
-  .task-card {
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:1.5rem;
-    position:relative;
-    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-    transition:all 0.3s;
-  }
-  .task-card:hover { box-shadow:0 0 30px var(--glow2); border-color:var(--accent2); }
-  .task-num {
-    font-family:'Orbitron',monospace;
-    font-size:2rem;
-    font-weight:900;
-    color:rgba(0,212,255,0.15);
-    position:absolute;
-    top:1rem; right:1.2rem;
-  }
-  .task-card h4 {
-    font-family:'Orbitron',monospace;
-    font-size:0.85rem;
-    color:var(--accent2);
-    margin-bottom:0.75rem;
-    letter-spacing:1px;
-  }
-  .task-card p { font-size:0.88rem; line-height:1.7; color:var(--text); }
-  .task-input {
-    width:100%;
-    background:var(--surface);
-    border:1px solid var(--border);
-    color:var(--text);
-    padding:0.6rem;
-    font-family:'Exo 2',sans-serif;
-    font-size:0.85rem;
-    margin-top:0.75rem;
-    resize:vertical;
-    min-height:80px;
-    outline:none;
-    transition:border-color 0.2s;
-  }
-  .task-input:focus { border-color:var(--accent2); box-shadow:0 0 10px var(--glow2); }
-
-  /* HOMEWORK */
-  .hw-card {
-    background:linear-gradient(135deg, rgba(199,125,255,0.05), rgba(0,212,255,0.05));
-    border:1px solid rgba(199,125,255,0.3);
-    padding:2rem;
-    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
-  }
-  .hw-items { display:grid; gap:1rem; margin-top:1.5rem; }
-  .hw-item {
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:1.2rem;
-    display:flex; gap:1rem; align-items:start;
-  }
-  .hw-icon {
-    width:36px; height:36px;
-    background:linear-gradient(135deg, var(--accent4), var(--accent1));
-    display:flex; align-items:center; justify-content:center;
-    font-size:1.2rem;
-    flex-shrink:0;
-    clip-path: polygon(5px 0,100% 0,calc(100% - 5px) 100%,0 100%);
-  }
-  .hw-item-text h5 {
-    font-family:'Orbitron',monospace;
-    font-size:0.8rem;
-    color:var(--accent4);
-    margin-bottom:0.4rem;
-  }
-  .hw-item-text p { font-size:0.85rem; color:var(--text); line-height:1.6; }
-
-  /* FINAL TEST */
-  .test-container {
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:2rem;
-    clip-path: polygon(0 0, calc(100% - 24px) 0, 100% 24px, 100% 100%, 24px 100%, 0 calc(100% - 24px));
-  }
-  .test-progress {
-    display:flex; align-items:center; gap:1rem; margin-bottom:2rem;
-  }
-  .progress-bar {
-    flex:1; height:4px; background:var(--surface);
-    border-radius:0;
-    overflow:hidden;
-  }
-  .progress-fill {
-    height:100%;
-    background:linear-gradient(90deg, var(--accent1), var(--accent2));
-    transition:width 0.4s ease;
-    box-shadow:0 0 10px var(--accent1);
-  }
-  .progress-text {
-    font-family:'Share Tech Mono',monospace;
-    font-size:0.8rem;
-    color:var(--muted);
-    white-space:nowrap;
-  }
-
-  .test-q {
-    font-size:1rem;
-    font-weight:600;
-    color:var(--text);
-    margin-bottom:1.5rem;
-    line-height:1.6;
-  }
-  .test-options { display:grid; gap:0.75rem; }
-  .test-opt {
-    background:var(--surface);
-    border:1px solid rgba(0,212,255,0.15);
-    color:var(--muted);
-    padding:0.8rem 1.2rem;
-    cursor:pointer;
-    transition:all 0.2s;
-    text-align:left;
-    font-family:'Exo 2',sans-serif;
-    font-size:0.9rem;
-    display:flex; align-items:center; gap:0.75rem;
-    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  }
-  .test-opt:hover { border-color:var(--accent1); color:var(--text); background:rgba(0,212,255,0.05); }
-  .test-opt.selected { border-color:var(--accent1); color:var(--accent1); background:rgba(0,212,255,0.1); }
-  .test-opt.correct { background:rgba(0,255,157,0.15); border-color:var(--accent2); color:var(--accent2); }
-  .test-opt.wrong { background:rgba(255,107,53,0.15); border-color:var(--accent3); color:var(--accent3); }
-  .test-opt-letter {
-    width:24px; height:24px;
-    background:rgba(0,212,255,0.1);
-    border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Orbitron',monospace;
-    font-size:0.7rem;
-    flex-shrink:0;
-  }
-
-  .test-nav { display:flex; justify-content:space-between; margin-top:1.5rem; align-items:center; }
-
-  /* RESULTS */
-  .results-panel { text-align:center; }
-  .result-circle {
-    width:160px; height:160px;
-    border-radius:50%;
-    border:3px solid var(--accent1);
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    margin:0 auto 2rem;
-    box-shadow:0 0 60px var(--glow1), inset 0 0 60px rgba(0,212,255,0.05);
-    position:relative;
-  }
-  .result-circle::before {
-    content:'';
-    position:absolute;
-    width:140px; height:140px;
-    border-radius:50%;
-    border:1px solid rgba(0,212,255,0.2);
-    animation:spin 8s linear infinite;
-  }
-  .result-score {
-    font-family:'Orbitron',monospace;
-    font-size:2.5rem;
-    font-weight:900;
-    color:var(--accent1);
-    text-shadow:0 0 30px var(--accent1);
-  }
-  .result-label {
-    font-size:0.75rem;
-    color:var(--muted);
-    letter-spacing:2px;
-  }
-
-  /* REFLECTION */
-  .reflection-grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:1rem;
-    margin-bottom:2rem;
-  }
-  .reflect-card {
-    background:var(--card);
-    border:1px solid var(--border);
-    padding:1.5rem;
-    text-align:center;
-    cursor:pointer;
-    transition:all 0.3s;
-    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  }
-  .reflect-card.selected {
-    border-color:var(--accent4);
-    background:rgba(199,125,255,0.1);
-    box-shadow:0 0 30px rgba(199,125,255,0.2);
-  }
-  .reflect-emoji { font-size:2.5rem; margin-bottom:0.75rem; }
-  .reflect-label { font-family:'Orbitron',monospace; font-size:0.75rem; color:var(--muted); letter-spacing:1px; }
-  .reflect-label-selected { color:var(--accent4); }
-
-  .reflect-form {
-    background:var(--card);
-    border:1px solid rgba(199,125,255,0.2);
-    padding:2rem;
-    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-  }
-  .reflect-form h3 {
-    font-family:'Orbitron',monospace;
-    font-size:0.85rem;
-    color:var(--accent4);
-    margin-bottom:0.6rem;
-    letter-spacing:1px;
-  }
-  .reflect-textarea {
-    width:100%;
-    background:var(--surface);
-    border:1px solid rgba(199,125,255,0.2);
-    color:var(--text);
-    padding:0.8rem;
-    font-family:'Exo 2',sans-serif;
-    font-size:0.88rem;
-    resize:vertical;
-    min-height:80px;
-    outline:none;
-    margin-bottom:1rem;
-    transition:border-color 0.2s;
-  }
-  .reflect-textarea:focus { border-color:var(--accent4); box-shadow:0 0 10px rgba(199,125,255,0.2); }
-
-  /* FOOTER */
+  /* ===== FOOTER ===== */
   footer {
-    position:relative; z-index:1;
-    text-align:center;
-    padding:2rem;
-    border-top:1px solid var(--border);
-    color:var(--muted);
-    font-family:'Share Tech Mono',monospace;
-    font-size:0.75rem;
-    letter-spacing:2px;
+    background: var(--green-dark); color: rgba(255,255,255,.5);
+    text-align: center; padding: 24px; font-size: 0.82rem;
   }
-
-  /* ANIMATIONS */
-  @keyframes fadeSlideDown {
-    from { opacity:0; transform:translateY(-20px); }
-    to { opacity:1; transform:translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity:0; } to { opacity:1; }
-  }
-  @keyframes spin {
-    from { transform:rotate(0deg); } to { transform:rotate(360deg); }
-  }
-  @keyframes pulse {
-    0%,100%{ opacity:1; } 50%{ opacity:0.5; }
-  }
-  @keyframes float {
-    0%,100%{ transform:translateY(0); }
-    50%{ transform:translateY(-10px); }
-  }
-
-  .floating { animation: float 4s ease-in-out infinite; }
-
-  /* GLOW DOT */
-  .glow-dot {
-    display:inline-block;
-    width:8px; height:8px;
-    background:var(--accent2);
-    border-radius:50%;
-    box-shadow:0 0 10px var(--accent2);
-    animation:pulse 2s infinite;
-    margin-right:0.5rem;
-  }
-
-  /* CHIP */
-  .chip {
-    display:inline-block;
-    background:rgba(0,212,255,0.1);
-    border:1px solid rgba(0,212,255,0.3);
-    color:var(--accent1);
-    font-family:'Share Tech Mono',monospace;
-    font-size:0.7rem;
-    padding:0.25rem 0.75rem;
-    letter-spacing:2px;
-    margin:0.25rem;
-    text-transform:uppercase;
-  }
-
-  /* CORNER DECO */
-  .corner-deco {
-    position:absolute;
-    width:20px; height:20px;
-    border-color:var(--accent1);
-    border-style:solid;
-  }
-  .corner-deco.tl { top:8px; left:8px; border-width:2px 0 0 2px; }
-  .corner-deco.tr { top:8px; right:8px; border-width:2px 2px 0 0; }
-  .corner-deco.bl { bottom:8px; left:8px; border-width:0 0 2px 2px; }
-  .corner-deco.br { bottom:8px; right:8px; border-width:0 2px 2px 0; }
-
-  /* SCAN LINE */
-  .scan-line {
-    position:absolute;
-    top:0; left:0; right:0; height:2px;
-    background:linear-gradient(90deg,transparent,var(--accent1),transparent);
-    animation:scan 3s linear infinite;
-  }
-  @keyframes scan {
-    0%{ top:0; opacity:1; }
-    100%{ top:100%; opacity:0; }
-  }
-
-  /* Highlight boxes */
-  .highlight-box {
-    background:rgba(0,212,255,0.05);
-    border-left:3px solid var(--accent1);
-    padding:0.8rem 1rem;
-    margin:0.75rem 0;
-    font-size:0.85rem;
-    line-height:1.7;
-  }
-  .highlight-box.green { border-color:var(--accent2); background:rgba(0,255,157,0.05); }
-  .highlight-box.orange { border-color:var(--accent3); background:rgba(255,107,53,0.05); }
-  .highlight-box.purple { border-color:var(--accent4); background:rgba(199,125,255,0.05); }
-
-  /* Insect SVG art */
-  .insect-hero-svg {
-    width:min(500px,90vw);
-    height:auto;
-    filter: drop-shadow(0 0 40px rgba(0,212,255,0.4));
-  }
-
-  /* notification toast */
-  .toast {
-    position:fixed;
-    bottom:2rem; right:2rem;
-    background:var(--card);
-    border:1px solid var(--accent2);
-    color:var(--accent2);
-    padding:0.8rem 1.5rem;
-    font-family:'Share Tech Mono',monospace;
-    font-size:0.8rem;
-    z-index:200;
-    transform:translateX(200%);
-    transition:transform 0.3s;
-    box-shadow:0 0 30px var(--glow2);
-  }
-  .toast.show { transform:translateX(0); }
-
-  /* Photo cards */
-  .photo-grid {
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:0.75rem;
-    margin-top:1rem;
-  }
-  @media(max-width:600px){ .photo-grid { grid-template-columns:1fr 1fr; } }
-  .photo-card {
-    aspect-ratio:1;
-    border:1px solid var(--border);
-    overflow:hidden;
-    position:relative;
-    cursor:pointer;
-  }
-  .photo-card img {
-    width:100%; height:100%;
-    object-fit:cover;
-    transition:transform 0.4s;
-    filter:saturate(0.6) brightness(0.8);
-  }
-  .photo-card:hover img { transform:scale(1.05); filter:saturate(1) brightness(1); }
-  .photo-card .photo-label {
-    position:absolute; bottom:0; left:0; right:0;
-    background:linear-gradient(transparent, rgba(0,0,0,0.8));
-    color:var(--text);
-    font-size:0.7rem;
-    padding:0.75rem 0.5rem 0.4rem;
-    font-family:'Share Tech Mono',monospace;
-    letter-spacing:1px;
-  }
-
-  .hidden { display:none !important; }
 </style>
 </head>
 <body>
 
-<canvas id="stars"></canvas>
-
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">⬡ ЭНТОМОЛОГИЯ</div>
-  <ul class="nav-links">
-    <li><a href="#check">Проверка</a></li>
-    <li><a href="#theory">Теория</a></li>
-    <li><a href="#tasks">Задания</a></li>
-    <li><a href="#homework">Д/З</a></li>
-    <li><a href="#test">Тест</a></li>
-    <li><a href="#reflection">Рефлексия</a></li>
-  </ul>
+  <a class="nav-logo" href="#"><span>🪲</span></a>
+  <div class="nav-links">
+    <a href="#hero">Главная</a>
+    <a href="#theory">Теория</a>
+    <a href="#dz">Задания</a>
+    <a href="#reflection">Рефлексия</a>
+    <a href="#">Контакты</a>
+  </div>
 </nav>
 
 <!-- HERO -->
-<div id="hero" style="max-width:100%;padding:100px 2rem 4rem;">
-  <!-- <div class="hero-eyebrow"><span class="glow-dot"></span> Биология · 7–8 класс · Тема 3</div> -->
-  <h1 class="hero-title">
-    Внутреннее строение<br>
-    <span>Насекомых</span>
-  </h1>
-  <p class="hero-sub">Путешествие в микрокосмос шестиногих властителей Земли. Изучите системы органов, механизмы выживания и эволюционные адаптации.</p>
-  <div class="hero-buttons">
-    <a href="#check" class="btn btn-primary">Начать урок</a>
-    <a href="#theory" class="btn btn-outline">Перейти к теории</a>
+<section class="hero" id="hero">
+  <!-- Background video: free CC0 nature/insect video from Pexels embed fallback using a gradient if missing -->
+  <video class="hero-video" autoplay muted loop playsinline poster="">
+    <source src="1.mp4" type="video/mp4">
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><span>🔬</span>2 курс · Группа Л–21</div>
+    <h1>Внутреннее строение тела насекомых</h1>
+    <p>Изучай, исследуй и понимай мир вокруг себя!<br>Тема: Внутреннее строение тела насекомых</p>
+    <a class="btn-primary" href="#dz">Начать урок</a>
   </div>
-  <div class="hero-visual floating">
-    <!-- Decorative insect SVG -->
-    <svg class="insect-hero-svg" viewBox="0 0 500 340" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="bg1" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="rgba(0,212,255,0.08)"/>
-          <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-        </radialGradient>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <!-- glow bg -->
-      <ellipse cx="250" cy="170" rx="230" ry="150" fill="url(#bg1)"/>
-      <!-- body -->
-      <ellipse cx="250" cy="200" rx="55" ry="80" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.7" filter="url(#glow)"/>
-      <!-- head -->
-      <circle cx="250" cy="115" r="32" fill="none" stroke="#00d4ff" stroke-width="1.5" opacity="0.8" filter="url(#glow)"/>
-      <!-- thorax -->
-      <ellipse cx="250" cy="163" rx="35" ry="20" fill="none" stroke="#00d4ff" stroke-width="1.2" opacity="0.6"/>
-      <!-- antennae -->
-      <path d="M235,90 Q210,55 190,35" fill="none" stroke="#00ff9d" stroke-width="1.2" opacity="0.8"/>
-      <path d="M265,90 Q290,55 310,35" fill="none" stroke="#00ff9d" stroke-width="1.2" opacity="0.8"/>
-      <circle cx="190" cy="35" r="3" fill="#00ff9d" opacity="0.9"/>
-      <circle cx="310" cy="35" r="3" fill="#00ff9d" opacity="0.9"/>
-      <!-- eyes -->
-      <ellipse cx="235" cy="112" rx="8" ry="7" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1"/>
-      <ellipse cx="265" cy="112" rx="8" ry="7" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1"/>
-      <ellipse cx="235" cy="112" rx="3" ry="3" fill="#00d4ff" opacity="0.9"/>
-      <ellipse cx="265" cy="112" rx="3" ry="3" fill="#00d4ff" opacity="0.9"/>
-      <!-- wings -->
-      <path d="M215,155 Q120,100 80,130 Q90,190 215,185" fill="rgba(0,212,255,0.05)" stroke="#00d4ff" stroke-width="1" opacity="0.7"/>
-      <path d="M285,155 Q380,100 420,130 Q410,190 285,185" fill="rgba(0,212,255,0.05)" stroke="#00d4ff" stroke-width="1" opacity="0.7"/>
-      <path d="M215,185 Q130,185 100,220 Q120,260 215,240" fill="rgba(0,255,157,0.04)" stroke="#00ff9d" stroke-width="0.8" opacity="0.6"/>
-      <path d="M285,185 Q370,185 400,220 Q380,260 285,240" fill="rgba(0,255,157,0.04)" stroke="#00ff9d" stroke-width="0.8" opacity="0.6"/>
-      <!-- legs -->
-      <path d="M220,165 Q170,155 140,145" fill="none" stroke="#c77dff" stroke-width="1" opacity="0.7"/>
-      <path d="M220,170 Q170,175 130,180" fill="none" stroke="#c77dff" stroke-width="1" opacity="0.7"/>
-      <path d="M220,180 Q170,200 145,225" fill="none" stroke="#c77dff" stroke-width="1" opacity="0.7"/>
-      <path d="M280,165 Q330,155 360,145" fill="none" stroke="#c77dff" stroke-width="1" opacity="0.7"/>
-      <path d="M280,170 Q330,175 370,180" fill="none" stroke="#c77dff" stroke-width="1" opacity="0.7"/>
-      <path d="M280,180 Q330,200 355,225" fill="none" stroke="#c77dff" stroke-width="1" opacity="0.7"/>
-      <!-- abdomen segments -->
-      <line x1="200" y1="220" x2="300" y2="220" stroke="rgba(0,212,255,0.3)" stroke-width="0.8"/>
-      <line x1="198" y1="240" x2="302" y2="240" stroke="rgba(0,212,255,0.3)" stroke-width="0.8"/>
-      <line x1="200" y1="260" x2="300" y2="260" stroke="rgba(0,212,255,0.3)" stroke-width="0.8"/>
-      <!-- internal system highlight - digestive -->
-      <path d="M250,130 Q255,160 248,200 Q252,230 250,275" fill="none" stroke="rgba(255,107,53,0.5)" stroke-width="2" stroke-dasharray="4,3"/>
-      <!-- labels -->
-      <text x="55" y="128" font-family="'Share Tech Mono'" font-size="9" fill="#00d4ff" opacity="0.8">КРЫЛО</text>
-      <line x1="78" y1="125" x2="100" y2="135" stroke="#00d4ff" stroke-width="0.7" opacity="0.5"/>
-      <text x="312" y="108" font-family="'Share Tech Mono'" font-size="9" fill="#00ff9d" opacity="0.8">УСИК</text>
-      <text x="160" y="142" font-family="'Share Tech Mono'" font-size="9" fill="#c77dff" opacity="0.8">ЛАПКА</text>
-      <text x="218" y="107" font-family="'Share Tech Mono'" font-size="9" fill="#00d4ff" opacity="0.8">ГОЛОВА</text>
-      <text x="222" y="158" font-family="'Share Tech Mono'" font-size="9" fill="#00d4ff" opacity="0.8">ГРУДЬ</text>
-      <text x="218" y="255" font-family="'Share Tech Mono'" font-size="9" fill="#00d4ff" opacity="0.8">БРЮШКО</text>
-      <!-- scanning effect line -->
-      <line x1="80" y1="170" x2="420" y2="170" stroke="rgba(0,212,255,0.15)" stroke-width="0.5" stroke-dasharray="3,6"/>
-    </svg>
-  </div>
-</div>
-
-<!-- ===== ПРОВЕРКА ЗНАНИЙ ===== -->
-<section id="check">
-  <div class="section-header">
-    <span class="section-tag">// Шаг 01</span>
-    <h2 class="section-title">Проверка <span>прошлой темы</span></h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="quiz-score-bar">
-    <div>
-      <div class="score-chip"><span id="quiz-score">0</span>/<span id="quiz-total">0</span></div>
-      <div class="score-label">Правильных ответов</div>
-    </div>
-    <div id="quiz-status" style="font-family:'Share Tech Mono',monospace;font-size:0.8rem;color:var(--muted);">Выберите правильное определение</div>
-  </div>
-
-  <div class="quiz-grid" id="quiz-container">
-    <!-- Questions generated by JS -->
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    Прокрути вниз
   </div>
 </section>
 
-<!-- ===== ТЕОРИЯ ===== -->
+<!-- DZ -->
+<section id="dz">
+  <div class="dz-header">
+    <div class="dz-icon">📋</div>
+    <div class="dz-meta">
+      <h2>Проверка домашнего задания</h2>
+      <p>Нажми на карточку — появится вопрос. Нажми ещё раз — увидишь ответ.</p>
+    </div>
+  </div>
+  <div class="cards-grid" id="cards-grid"></div>
+  <div class="dz-controls">
+    <button class="btn-reset" onclick="resetCards()">🔄 Сбросить карточки</button>
+  </div>
+</section>
+
+<!-- THEORY -->
 <section id="theory">
-  <div class="section-header">
-    <span class="section-tag">// Шаг 02</span>
-    <h2 class="section-title">Системы <span>органов</span></h2>
-    <div class="section-line"></div>
-  </div>
+  <div class="section-title">Теория</div>
+  <div class="section-subtitle">Изучи новый материал. Внимательно прочитай текст и рассмотри иллюстрации.</div>
+  <div class="tabs-row" id="tabs-row"></div>
+  <div id="tab-panels"></div>
+</section>
 
-  <div class="theory-tabs">
-    <button class="tab-btn active" onclick="showTab('digestive')">🍽 Пищеварительная</button>
-    <button class="tab-btn" onclick="showTab('respiratory')">💨 Дыхательная</button>
-    <button class="tab-btn" onclick="showTab('circulatory')">🫀 Кровеносная</button>
-    <button class="tab-btn" onclick="showTab('nervous')">🧠 Нервная</button>
-    <button class="tab-btn" onclick="showTab('excretory')">🧪 Выделительная</button>
-  </div>
-
-  <!-- ПИЩЕВАРИТЕЛЬНАЯ -->
-  <div class="theory-panel active" id="panel-digestive">
-    <div class="theory-body">
-      <div class="theory-text">
-        <div class="info-badge">СИСТЕМА 01 — ПИЩЕВАРИТЕЛЬНАЯ</div>
-        <h3>Пищеварительная система</h3>
-        <p>Трубчатый орган, обеспечивающий приём пищи, её переваривание, всасывание питательных веществ и выведение непереваренных остатков.</p>
-        <div class="highlight-box">
-          <strong>Передняя кишка:</strong> ротовая полость → глотка → пищевод → зоб → мускульный желудок.<br>
-          Функция: захват, накопление и механическая обработка пищи.
-        </div>
-        <div class="highlight-box green">
-          <strong>Средняя кишка:</strong> основной отдел пищеварения. Выделяет ферменты, происходит всасывание питательных веществ.<br>
-          Особенность: <em>отсутствует хитиновая выстилка</em>.
-        </div>
-        <div class="highlight-box orange">
-          <strong>Задняя кишка:</strong> подвздошная, прямая кишка, анальное отверстие.<br>
-          Функция: всасывание воды и формирование каловых масс.
-        </div>
-        <h3 style="margin-top:1.2rem;">Дополнительные органы</h3>
-        <ul>
-          <li><strong>Слюнные железы</strong> — смачивают пищу, выделяют ферменты или ядовитые вещества</li>
-          <li><strong>Симбиотические микроорганизмы</strong> — участвуют в переваривании растительной пищи</li>
-        </ul>
-      </div>
-      <div>
-        <div class="system-diagram" style="position:relative;">
-          <div class="scan-line"></div>
-          <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
-          <div class="corner-deco bl"></div><div class="corner-deco br"></div>
-          <svg viewBox="0 0 280 380" class="diagram-svg">
-            <defs>
-              <linearGradient id="dgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#ff6b35" stop-opacity="0.6"/>
-                <stop offset="100%" stop-color="#ff6b35" stop-opacity="0.2"/>
-              </linearGradient>
-            </defs>
-            <!-- body outline -->
-            <ellipse cx="140" cy="200" rx="50" ry="130" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
-            <!-- head -->
-            <circle cx="140" cy="55" r="30" fill="rgba(0,212,255,0.05)" stroke="#00d4ff" stroke-width="1" opacity="0.6"/>
-            <text x="140" y="59" text-anchor="middle" font-family="'Share Tech Mono'" font-size="8" fill="#00d4ff">ГОЛОВА</text>
-            <!-- mouth -->
-            <path d="M128,78 Q140,85 152,78" fill="none" stroke="#00ff9d" stroke-width="1.5"/>
-            <text x="168" y="82" font-family="'Share Tech Mono'" font-size="7" fill="#00ff9d">РОТ</text>
-            <!-- pharynx -->
-            <rect x="130" y="86" width="20" height="14" rx="3" fill="url(#dgGrad)" stroke="#ff6b35" stroke-width="1"/>
-            <text x="158" y="96" font-family="'Share Tech Mono'" font-size="7" fill="#ff6b35">ГЛОТКА</text>
-            <!-- esophagus -->
-            <rect x="133" y="102" width="14" height="25" rx="2" fill="url(#dgGrad)" stroke="#ff6b35" stroke-width="1"/>
-            <text x="155" y="117" font-family="'Share Tech Mono'" font-size="7" fill="#ff6b35">ПИЩЕВОД</text>
-            <!-- crop -->
-            <ellipse cx="140" cy="138" rx="18" ry="13" fill="rgba(255,107,53,0.2)" stroke="#ff6b35" stroke-width="1.2"/>
-            <text x="140" y="141" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#ff6b35">ЗОБ</text>
-            <!-- gizzard -->
-            <ellipse cx="140" cy="165" rx="15" ry="12" fill="rgba(255,107,53,0.25)" stroke="#ff6b35" stroke-width="1.5"/>
-            <text x="112" y="169" text-anchor="end" font-family="'Share Tech Mono'" font-size="7" fill="#ff6b35">МУС.ЖЕЛ.</text>
-            <!-- midgut -->
-            <rect x="126" y="180" width="28" height="60" rx="4" fill="rgba(0,255,157,0.15)" stroke="#00ff9d" stroke-width="1.5"/>
-            <text x="140" y="212" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00ff9d">СРЕДНЯЯ</text>
-            <text x="140" y="223" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00ff9d">КИШКА</text>
-            <!-- malpighian -->
-            <path d="M154,195 Q175,188 178,200 Q175,212 154,208" fill="none" stroke="#c77dff" stroke-width="1" stroke-dasharray="2,2"/>
-            <text x="180" y="202" font-family="'Share Tech Mono'" font-size="6.5" fill="#c77dff">МАЛЬП.</text>
-            <!-- hindgut -->
-            <rect x="128" y="242" width="24" height="50" rx="3" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="1.2"/>
-            <text x="140" y="265" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00d4ff">ЗАДНЯЯ</text>
-            <text x="140" y="276" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00d4ff">КИШКА</text>
-            <!-- rectum -->
-            <ellipse cx="140" cy="303" rx="14" ry="9" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1"/>
-            <text x="140" y="306" text-anchor="middle" font-family="'Share Tech Mono'" font-size="6.5" fill="#00d4ff">ПРЯМАЯ</text>
-            <!-- anus -->
-            <path d="M136,312 Q140,320 144,312" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
-            <text x="140" y="334" text-anchor="middle" font-family="'Share Tech Mono'" font-size="6.5" fill="#00d4ff">АНАЛ.ОТВ.</text>
-            <!-- flow arrows -->
-            <path d="M140,295 L140,312" stroke="#00d4ff" stroke-width="0.8" marker-end="url(#arr)"/>
-          </svg>
-          <p style="text-align:center;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);margin-top:0.5rem;">
-            Схема пищеварительного тракта
-          </p>
-        </div>
-      </div>
+<!-- QR -->
+<section id="qr-section">
+  <div class="qr-inner">
+    <div class="qr-box">
+      <!-- QR code pointing to test.html — generated as SVG inline -->
+      <svg width="140" height="140" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- Simple decorative QR placeholder; replace src with actual QR if needed -->
+        <rect width="140" height="140" fill="white"/>
+        <!-- Position detection patterns -->
+        <rect x="10" y="10" width="40" height="40" fill="none" stroke="#1a3a1a" stroke-width="4"/>
+        <rect x="16" y="16" width="28" height="28" fill="#1a3a1a"/>
+        <rect x="90" y="10" width="40" height="40" fill="none" stroke="#1a3a1a" stroke-width="4"/>
+        <rect x="96" y="16" width="28" height="28" fill="#1a3a1a"/>
+        <rect x="10" y="90" width="40" height="40" fill="none" stroke="#1a3a1a" stroke-width="4"/>
+        <rect x="16" y="96" width="28" height="28" fill="#1a3a1a"/>
+        <!-- Data modules (simplified pattern) -->
+        <g fill="#1a3a1a">
+          <rect x="60" y="10" width="8" height="8"/><rect x="72" y="10" width="8" height="8"/>
+          <rect x="60" y="22" width="8" height="8"/><rect x="60" y="34" width="8" height="8"/>
+          <rect x="72" y="34" width="8" height="8"/>
+          <rect x="10" y="60" width="8" height="8"/><rect x="22" y="60" width="8" height="8"/>
+          <rect x="34" y="60" width="8" height="8"/><rect x="10" y="72" width="8" height="8"/>
+          <rect x="34" y="72" width="8" height="8"/><rect x="22" y="72" width="8" height="8"/>
+          <rect x="60" y="60" width="8" height="8"/><rect x="72" y="60" width="8" height="8"/>
+          <rect x="84" y="60" width="8" height="8"/><rect x="96" y="60" width="8" height="8"/>
+          <rect x="108" y="60" width="8" height="8"/><rect x="120" y="60" width="8" height="8"/>
+          <rect x="60" y="72" width="8" height="8"/><rect x="84" y="72" width="8" height="8"/>
+          <rect x="108" y="72" width="8" height="8"/><rect x="60" y="84" width="8" height="8"/>
+          <rect x="72" y="84" width="8" height="8"/><rect x="96" y="84" width="8" height="8"/>
+          <rect x="120" y="84" width="8" height="8"/><rect x="60" y="96" width="8" height="8"/>
+          <rect x="84" y="96" width="8" height="8"/><rect x="108" y="96" width="8" height="8"/>
+          <rect x="72" y="108" width="8" height="8"/><rect x="96" y="108" width="8" height="8"/>
+          <rect x="120" y="108" width="8" height="8"/><rect x="60" y="120" width="8" height="8"/>
+          <rect x="84" y="120" width="8" height="8"/><rect x="108" y="120" width="8" height="8"/>
+        </g>
+        <!-- Center logo -->
+        <rect x="58" y="58" width="24" height="24" rx="4" fill="#2d6a2d"/>
+        <text x="70" y="75" font-size="14" text-anchor="middle" fill="white">🪲</text>
+      </svg>
     </div>
-  </div>
-
-  <!-- ДЫХАТЕЛЬНАЯ -->
-  <div class="theory-panel" id="panel-respiratory">
-    <div class="theory-body">
-      <div class="theory-text">
-        <div class="info-badge">СИСТЕМА 02 — ДЫХАТЕЛЬНАЯ</div>
-        <h3>Трахейная система</h3>
-        <p>Насекомые дышат с помощью трахейной системы, которая обеспечивает прямую доставку кислорода к органам и тканям, минуя кровеносную систему.</p>
-        <div class="highlight-box">
-          <strong>Дыхальца (стигмы)</strong> — отверстия на боках грудных и брюшных сегментов
-        </div>
-        <div class="highlight-box green">
-          <strong>Трахеи</strong> — разветвлённые трубочки, выстланные хитином
-        </div>
-        <div class="highlight-box purple">
-          <strong>Трахеолы</strong> — мельчайшие ответвления, контактирующие с клетками
-        </div>
-        <h3 style="margin-top:1.2rem;">Особенности</h3>
-        <ul>
-          <li>Кровеносная система <strong>не участвует</strong> в переносе кислорода</li>
-          <li>Высокая эффективность газообмена</li>
-          <li>Экономия воды (дыхальца могут закрываться)</li>
-          <li>Приспособленность к наземному образу жизни</li>
-        </ul>
-      </div>
-      <div>
-        <div class="system-diagram" style="position:relative;">
-          <div class="scan-line"></div>
-          <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
-          <div class="corner-deco bl"></div><div class="corner-deco br"></div>
-          <svg viewBox="0 0 280 360" class="diagram-svg">
-            <!-- body -->
-            <ellipse cx="140" cy="190" rx="70" ry="140" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
-            <!-- spiracles -->
-            <circle cx="75" cy="140" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <circle cx="75" cy="165" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <circle cx="75" cy="190" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <circle cx="75" cy="215" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <circle cx="205" cy="140" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <circle cx="205" cy="165" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <circle cx="205" cy="190" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <circle cx="205" cy="215" r="6" fill="rgba(0,212,255,0.2)" stroke="#00d4ff" stroke-width="1.5"/>
-            <!-- trachea main tube -->
-            <path d="M81,140 Q105,140 140,138 Q175,140 199,140" fill="none" stroke="#00ff9d" stroke-width="2.5" opacity="0.8"/>
-            <path d="M81,165 Q105,165 140,163 Q175,165 199,165" fill="none" stroke="#00ff9d" stroke-width="2.5" opacity="0.8"/>
-            <path d="M81,190 Q105,190 140,188 Q175,190 199,190" fill="none" stroke="#00ff9d" stroke-width="2.5" opacity="0.8"/>
-            <path d="M81,215 Q105,215 140,213 Q175,215 199,215" fill="none" stroke="#00ff9d" stroke-width="2.5" opacity="0.8"/>
-            <!-- tracheoles branching -->
-            <path d="M115,140 Q112,120 108,100 Q106,80 110,60" fill="none" stroke="#00ff9d" stroke-width="1" opacity="0.5"/>
-            <path d="M140,138 L140,60" fill="none" stroke="#00ff9d" stroke-width="1" opacity="0.5"/>
-            <path d="M165,140 Q168,120 172,100 Q174,80 170,60" fill="none" stroke="#00ff9d" stroke-width="1" opacity="0.5"/>
-            <path d="M108,100 Q96,95 88,90" fill="none" stroke="#00ff9d" stroke-width="0.8" opacity="0.4"/>
-            <path d="M108,100 Q108,88 110,78" fill="none" stroke="#00ff9d" stroke-width="0.8" opacity="0.4"/>
-            <path d="M172,100 Q184,95 192,90" fill="none" stroke="#00ff9d" stroke-width="0.8" opacity="0.4"/>
-            <!-- labels -->
-            <text x="55" y="145" text-anchor="end" font-family="'Share Tech Mono'" font-size="7.5" fill="#00d4ff">СТИГМА</text>
-            <text x="170" y="85" font-family="'Share Tech Mono'" font-size="7.5" fill="#00ff9d">ТРАХЕОЛЫ</text>
-            <text x="140" y="295" text-anchor="middle" font-family="'Share Tech Mono'" font-size="8" fill="#00ff9d">ТРАХЕИ</text>
-            <!-- O2 arrows -->
-            <text x="82" y="133" font-family="'Share Tech Mono'" font-size="7" fill="#c77dff">O₂</text>
-            <text x="82" y="158" font-family="'Share Tech Mono'" font-size="7" fill="#c77dff">O₂</text>
-            <!-- lung label -->
-            <text x="140" y="335" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00d4ff" opacity="0.6">Трахейная система насекомого</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- КРОВЕНОСНАЯ -->
-  <div class="theory-panel" id="panel-circulatory">
-    <div class="theory-body">
-      <div class="theory-text">
-        <div class="info-badge">СИСТЕМА 03 — КРОВЕНОСНАЯ</div>
-        <h3>Незамкнутая система</h3>
-        <p>Кровеносная система насекомых незамкнутая. Выполняет перенос питательных веществ, гормонов и продуктов обмена, но <strong>не участвует</strong> в доставке кислорода.</p>
-        <div class="highlight-box">
-          <strong>Сердце</strong> — продольный спинной сосуд, разделённый на камеры с клапанами. Проталкивает гемолимфу вперёд.
-        </div>
-        <div class="highlight-box green">
-          <strong>Аорта</strong> — продолжение сердца; обеспечивает движение гемолимфы к головным органам.
-        </div>
-        <div class="highlight-box orange">
-          <strong>Гемолимфа</strong> — аналог крови. Переносит питательные вещества, гормоны, участвует в иммунной защите. <em>Не переносит кислород!</em>
-        </div>
-        <h3 style="margin-top:1.2rem;">Значение</h3>
-        <ul>
-          <li>Питание клеток и органов</li>
-          <li>Терморегуляция и иммунная защита</li>
-          <li>Высокий уровень метаболизма</li>
-        </ul>
-      </div>
-      <div>
-        <div class="system-diagram" style="position:relative;">
-          <div class="scan-line"></div>
-          <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
-          <div class="corner-deco bl"></div><div class="corner-deco br"></div>
-          <svg viewBox="0 0 280 340" class="diagram-svg">
-            <!-- body outline -->
-            <ellipse cx="140" cy="185" rx="80" ry="130" fill="rgba(255,107,53,0.03)" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,3" opacity="0.4"/>
-            <!-- heart chambers on dorsal side -->
-            <text x="140" y="30" text-anchor="middle" font-family="'Share Tech Mono'" font-size="8" fill="#ff6b35">СПИННОЙ СОСУД (СЕРДЦЕ)</text>
-            <!-- heart tube -->
-            <path d="M60,60 L220,60" fill="none" stroke="#ff6b35" stroke-width="4" opacity="0.8"/>
-            <!-- chambers -->
-            <ellipse cx="80" cy="60" rx="12" ry="8" fill="rgba(255,107,53,0.3)" stroke="#ff6b35" stroke-width="1.5"/>
-            <ellipse cx="105" cy="60" rx="12" ry="8" fill="rgba(255,107,53,0.3)" stroke="#ff6b35" stroke-width="1.5"/>
-            <ellipse cx="130" cy="60" rx="12" ry="8" fill="rgba(255,107,53,0.3)" stroke="#ff6b35" stroke-width="1.5"/>
-            <ellipse cx="155" cy="60" rx="12" ry="8" fill="rgba(255,107,53,0.3)" stroke="#ff6b35" stroke-width="1.5"/>
-            <ellipse cx="180" cy="60" rx="12" ry="8" fill="rgba(255,107,53,0.3)" stroke="#ff6b35" stroke-width="1.5"/>
-            <!-- aorta -->
-            <path d="M60,60 Q50,55 40,48 Q30,35 35,22" fill="none" stroke="#ff6b35" stroke-width="2.5" opacity="0.9"/>
-            <text x="12" y="18" font-family="'Share Tech Mono'" font-size="7.5" fill="#ff6b35">АОРТА</text>
-            <!-- haemolymph flow arrows -->
-            <path d="M200,85 Q200,120 195,155 Q190,190 185,225 Q180,255 175,275" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
-            <path d="M80,85 Q80,120 85,155 Q90,190 95,225 Q100,255 105,275" fill="none" stroke="rgba(0,212,255,0.3)" stroke-width="1.5" stroke-dasharray="4,3"/>
-            <!-- ostia -->
-            <line x1="80" y1="68" x2="80" y2="85" stroke="#c77dff" stroke-width="1" stroke-dasharray="2,2"/>
-            <line x1="105" y1="68" x2="105" y2="85" stroke="#c77dff" stroke-width="1" stroke-dasharray="2,2"/>
-            <line x1="130" y1="68" x2="130" y2="85" stroke="#c77dff" stroke-width="1" stroke-dasharray="2,2"/>
-            <line x1="155" y1="68" x2="155" y2="85" stroke="#c77dff" stroke-width="1" stroke-dasharray="2,2"/>
-            <line x1="180" y1="68" x2="180" y2="85" stroke="#c77dff" stroke-width="1" stroke-dasharray="2,2"/>
-            <text x="140" y="100" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#c77dff">ОСТИИ (КЛАПАНЫ)</text>
-            <!-- haemolymph label -->
-            <text x="140" y="200" text-anchor="middle" font-family="'Share Tech Mono'" font-size="8" fill="#00d4ff" opacity="0.7">ГЕМОЛИМФА</text>
-            <text x="140" y="215" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00d4ff" opacity="0.5">(циркулирует в полости тела)</text>
-            <text x="140" y="310" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#muted" opacity="0.5">Незамкнутая кровеносная система</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- НЕРВНАЯ -->
-  <div class="theory-panel" id="panel-nervous">
-    <div class="theory-body">
-      <div class="theory-text">
-        <div class="info-badge">СИСТЕМА 04 — НЕРВНАЯ</div>
-        <h3>Ганглионарный тип</h3>
-        <p>Нервная система насекомых обеспечивает связь с окружающей средой, координацию движений и регуляцию работы внутренних органов.</p>
-        <div class="highlight-box">
-          <strong>Надглоточный ганглий (мозг)</strong> — регулирует деятельность органов чувств и сложные формы поведения
-        </div>
-        <div class="highlight-box green">
-          <strong>Подглоточный ганглий</strong> — управляет работой ротового аппарата
-        </div>
-        <div class="highlight-box purple">
-          <strong>Брюшная нервная цепочка</strong> — система ганглиев, контролирующих движения и работу внутренних органов
-        </div>
-        <h3 style="margin-top:1.2rem;">Состав системы</h3>
-        <ul>
-          <li><strong>ЦНС</strong> — мозг + брюшная нервная цепочка</li>
-          <li><strong>Периферическая НС</strong> — нервы от ганглиев к органам</li>
-          <li><strong>Висцеральная НС</strong> — регуляция внутренних органов</li>
-        </ul>
-      </div>
-      <div>
-        <div class="system-diagram" style="position:relative;">
-          <div class="scan-line"></div>
-          <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
-          <div class="corner-deco bl"></div><div class="corner-deco br"></div>
-          <svg viewBox="0 0 280 360" class="diagram-svg">
-            <!-- body -->
-            <ellipse cx="140" cy="195" rx="60" ry="140" fill="none" stroke="#00d4ff" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
-            <!-- brain -->
-            <ellipse cx="140" cy="65" rx="28" ry="20" fill="rgba(199,125,255,0.2)" stroke="#c77dff" stroke-width="2"/>
-            <text x="140" y="69" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7.5" fill="#c77dff">МОЗГ</text>
-            <!-- subesophageal -->
-            <ellipse cx="140" cy="95" rx="20" ry="13" fill="rgba(199,125,255,0.15)" stroke="#c77dff" stroke-width="1.5"/>
-            <text x="185" y="98" font-family="'Share Tech Mono'" font-size="7" fill="#c77dff">ПОДГЛОТ.</text>
-            <!-- connectives -->
-            <line x1="140" y1="85" x2="140" y2="108" stroke="#c77dff" stroke-width="1.5"/>
-            <!-- thoracic ganglia -->
-            <rect x="122" y="118" width="36" height="18" rx="4" fill="rgba(0,255,157,0.15)" stroke="#00ff9d" stroke-width="1.5"/>
-            <text x="140" y="130" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00ff9d">ГР.ГАНГЛИЙ 1</text>
-            <rect x="122" y="148" width="36" height="18" rx="4" fill="rgba(0,255,157,0.15)" stroke="#00ff9d" stroke-width="1.5"/>
-            <text x="140" y="160" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00ff9d">ГР.ГАНГЛИЙ 2</text>
-            <rect x="122" y="178" width="36" height="18" rx="4" fill="rgba(0,255,157,0.15)" stroke="#00ff9d" stroke-width="1.5"/>
-            <text x="140" y="190" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7" fill="#00ff9d">ГР.ГАНГЛИЙ 3</text>
-            <!-- abdominal ganglia -->
-            <rect x="126" y="208" width="28" height="14" rx="3" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1"/>
-            <rect x="126" y="234" width="28" height="14" rx="3" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1"/>
-            <rect x="126" y="260" width="28" height="14" rx="3" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1"/>
-            <rect x="126" y="286" width="28" height="14" rx="3" fill="rgba(0,212,255,0.15)" stroke="#00d4ff" stroke-width="1"/>
-            <text x="164" y="217" font-family="'Share Tech Mono'" font-size="6.5" fill="#00d4ff">БРЮШНАЯ</text>
-            <text x="164" y="228" font-family="'Share Tech Mono'" font-size="6.5" fill="#00d4ff">ЦЕПОЧКА</text>
-            <!-- chain lines -->
-            <line x1="140" y1="108" x2="140" y2="118" stroke="#c77dff" stroke-width="1"/>
-            <line x1="140" y1="136" x2="140" y2="148" stroke="#00ff9d" stroke-width="1"/>
-            <line x1="140" y1="166" x2="140" y2="178" stroke="#00ff9d" stroke-width="1"/>
-            <line x1="140" y1="196" x2="140" y2="208" stroke="#00d4ff" stroke-width="1"/>
-            <line x1="140" y1="222" x2="140" y2="234" stroke="#00d4ff" stroke-width="1"/>
-            <line x1="140" y1="248" x2="140" y2="260" stroke="#00d4ff" stroke-width="1"/>
-            <line x1="140" y1="274" x2="140" y2="286" stroke="#00d4ff" stroke-width="1"/>
-            <!-- peripheral nerves -->
-            <path d="M122,130 Q100,135 88,145" fill="none" stroke="rgba(0,255,157,0.4)" stroke-width="0.8"/>
-            <path d="M158,130 Q180,135 192,145" fill="none" stroke="rgba(0,255,157,0.4)" stroke-width="0.8"/>
-            <path d="M122,155 Q100,160 85,170" fill="none" stroke="rgba(0,255,157,0.4)" stroke-width="0.8"/>
-            <path d="M158,155 Q180,160 195,170" fill="none" stroke="rgba(0,255,157,0.4)" stroke-width="0.8"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ВЫДЕЛИТЕЛЬНАЯ -->
-  <div class="theory-panel" id="panel-excretory">
-    <div class="theory-body">
-      <div class="theory-text">
-        <div class="info-badge">СИСТЕМА 05 — ВЫДЕЛИТЕЛЬНАЯ</div>
-        <h3>Мальпигиевы сосуды</h3>
-        <p>Выделительная система насекомых обеспечивает удаление продуктов обмена, поддержание водно-солевого баланса и адаптацию к наземному образу жизни.</p>
-        <div class="highlight-box">
-          <strong>Мальпигиевы сосуды</strong> — тонкие трубочки, впадающие в задний отдел кишечника. Основной орган выделения.
-        </div>
-        <div class="highlight-box green">
-          <strong>Жировое тело (задняя кишка)</strong> — участвует в обратном всасывании воды и солей. Способствует образованию сухих экскрементов.
-        </div>
-        <h3 style="margin-top:1.2rem;">Механизм</h3>
-        <ul>
-          <li>Продукты обмена (в основном <strong>мочевая кислота</strong>) поступают из гемолимфы в мальпигиевы сосуды</li>
-          <li>Далее попадают в кишечник и выводятся наружу</li>
-          <li>Вода частично возвращается в организм</li>
-        </ul>
-      </div>
-      <div>
-        <div class="system-diagram" style="position:relative;">
-          <div class="scan-line"></div>
-          <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
-          <div class="corner-deco bl"></div><div class="corner-deco br"></div>
-          <svg viewBox="0 0 280 320" class="diagram-svg">
-            <!-- body cavity -->
-            <ellipse cx="140" cy="170" rx="80" ry="110" fill="rgba(0,212,255,0.03)" stroke="#00d4ff" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.3"/>
-            <!-- midgut -->
-            <rect x="115" y="80" width="50" height="70" rx="6" fill="rgba(0,255,157,0.1)" stroke="#00ff9d" stroke-width="1.5"/>
-            <text x="140" y="118" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7.5" fill="#00ff9d">СРЕДНЯЯ</text>
-            <text x="140" y="130" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7.5" fill="#00ff9d">КИШКА</text>
-            <!-- malpighian tubes -->
-            <path d="M155,95 Q185,75 200,60 Q215,45 205,35" fill="none" stroke="#c77dff" stroke-width="2"/>
-            <path d="M155,100 Q190,90 215,80 Q235,70 230,58" fill="none" stroke="#c77dff" stroke-width="2"/>
-            <path d="M155,110 Q195,115 220,120 Q240,130 238,145" fill="none" stroke="#c77dff" stroke-width="2"/>
-            <path d="M125,95 Q95,75 80,60 Q65,45 75,35" fill="none" stroke="#c77dff" stroke-width="2"/>
-            <path d="M125,110 Q85,115 60,120 Q42,130 44,145" fill="none" stroke="#c77dff" stroke-width="2"/>
-            <!-- tips -->
-            <circle cx="205" cy="35" r="4" fill="#c77dff" opacity="0.8"/>
-            <circle cx="230" cy="58" r="4" fill="#c77dff" opacity="0.8"/>
-            <circle cx="238" cy="145" r="4" fill="#c77dff" opacity="0.8"/>
-            <circle cx="75" cy="35" r="4" fill="#c77dff" opacity="0.8"/>
-            <circle cx="44" cy="145" r="4" fill="#c77dff" opacity="0.8"/>
-            <text x="245" y="32" font-family="'Share Tech Mono'" font-size="7" fill="#c77dff">МАЛЬП.</text>
-            <text x="245" y="42" font-family="'Share Tech Mono'" font-size="7" fill="#c77dff">СОСУДЫ</text>
-            <!-- hindgut -->
-            <rect x="120" y="152" width="40" height="55" rx="4" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="1.5"/>
-            <text x="140" y="183" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7.5" fill="#00d4ff">ЗАДНЯЯ</text>
-            <text x="140" y="195" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7.5" fill="#00d4ff">КИШКА</text>
-            <!-- fat body -->
-            <path d="M70,185 Q65,200 75,215 Q82,225 75,235" fill="none" stroke="#ff6b35" stroke-width="1.5" stroke-dasharray="3,2"/>
-            <ellipse cx="70" cy="210" rx="15" ry="25" fill="rgba(255,107,53,0.1)" stroke="#ff6b35" stroke-width="1"/>
-            <text x="42" y="213" text-anchor="end" font-family="'Share Tech Mono'" font-size="7" fill="#ff6b35">ЖИРОВОЕ</text>
-            <text x="42" y="224" text-anchor="end" font-family="'Share Tech Mono'" font-size="7" fill="#ff6b35">ТЕЛО</text>
-            <!-- uric acid label -->
-            <text x="140" y="255" text-anchor="middle" font-family="'Share Tech Mono'" font-size="7.5" fill="#c77dff">МОЧЕВАЯ КИСЛОТА →</text>
-            <!-- rectum -->
-            <ellipse cx="140" cy="225" rx="18" ry="10" fill="rgba(0,212,255,0.1)" stroke="#00d4ff" stroke-width="1"/>
-            <text x="140" y="228" text-anchor="middle" font-family="'Share Tech Mono'" font-size="6.5" fill="#00d4ff">ПРЯМАЯ К.</text>
-            <line x1="140" y1="207" x2="140" y2="215" stroke="#00d4ff" stroke-width="1"/>
-          </svg>
-        </div>
-      </div>
+    <div class="qr-content">
+      <h2>Дополнительные материалы</h2>
+      <p>Отсканируй QR-код или нажми кнопку для перехода к тестам по теме урока.</p>
+      <a class="btn-white" href="test.html">🧪 Перейти к тестам</a>
     </div>
   </div>
 </section>
 
-<!-- ===== ЗАДАНИЯ ===== -->
-<section id="tasks">
-  <div class="section-header">
-    <span class="section-tag">// Шаг 03</span>
-    <h2 class="section-title">Практические <span>задания</span></h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="tasks-grid">
-    <div class="task-card">
-      <div class="task-num">01</div>
-      <h4>Сравнительный анализ</h4>
-      <p>Сравните пищеварительные системы насекомого и позвоночного животного. Укажите сходства и различия.</p>
-      <textarea class="task-input" placeholder="Введите ваш ответ здесь..."></textarea>
-    </div>
-    <div class="task-card">
-      <div class="task-num">02</div>
-      <h4>Трахейная система</h4>
-      <p>Объясните, почему трахейная система считается более эффективной для насекомых, чем кровеносная доставка кислорода.</p>
-      <textarea class="task-input" placeholder="Введите ваш ответ здесь..."></textarea>
-    </div>
-    <div class="task-card">
-      <div class="task-num">03</div>
-      <h4>Экономия воды</h4>
-      <p>Как строение выделительной системы насекомых связано с их приспособлением к наземному образу жизни?</p>
-      <textarea class="task-input" placeholder="Введите ваш ответ здесь..."></textarea>
-    </div>
-    <div class="task-card">
-      <div class="task-num">04</div>
-      <h4>Нервная цепочка</h4>
-      <p>Почему нервная система насекомых называется «узловой» (ганглионарной)? Перечислите основные узлы.</p>
-      <textarea class="task-input" placeholder="Введите ваш ответ здесь..."></textarea>
-    </div>
-    <div class="task-card">
-      <div class="task-num">05</div>
-      <h4>Гемолимфа vs кровь</h4>
-      <p>Чем гемолимфа насекомых отличается от крови млекопитающих? Какие функции она выполняет?</p>
-      <textarea class="task-input" placeholder="Введите ваш ответ здесь..."></textarea>
-    </div>
-    <div class="task-card">
-      <div class="task-num">06</div>
-      <h4>Юный энтомолог</h4>
-      <p>Перечислите все 5 систем органов насекомых из урока и кратко опишите главную функцию каждой.</p>
-      <textarea class="task-input" placeholder="1. Пищеварительная — ..."></textarea>
-    </div>
-  </div>
-</section>
-
-<!-- ===== ДОМАШНЕЕ ЗАДАНИЕ ===== -->
-<section id="homework">
-  <div class="section-header">
-    <span class="section-tag">// Шаг 04</span>
-    <h2 class="section-title">Домашнее <span>задание</span></h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="hw-card">
-    <p style="color:var(--muted);font-size:0.85rem;line-height:1.7;">Дополните определения и высказывания. Используйте знания из урока и учебника для заполнения пропусков.</p>
-    <div class="hw-items">
-      <div class="hw-item">
-        <div class="hw-icon">🔬</div>
-        <div class="hw-item-text">
-          <h5>Задание 1 — Определения</h5>
-          <p><strong>Энтомология</strong> – это раздел биологии, который изучает ___. Она занимается их строением, развитием, поведением, разнообразием, ролью в природе и влиянием на человека.</p>
-        </div>
-      </div>
-      <div class="hw-item">
-        <div class="hw-icon">⏳</div>
-        <div class="hw-item-text">
-          <h5>Задание 2 — Эволюция</h5>
-          <p><strong>Насекомые существуют на Земле</strong> около ___ миллионов лет. Они появились ещё в ___ периоде, задолго до динозавров.</p>
-        </div>
-      </div>
-      <div class="hw-item">
-        <div class="hw-icon">🌍</div>
-        <div class="hw-item-text">
-          <h5>Задание 3 — Среда обитания</h5>
-          <p><strong>Насекомые способны жить</strong> в самых разнообразных условиях среды обитания — на суше, в ___, в ___ и даже в экстремальных климатических условиях.</p>
-        </div>
-      </div>
-      <div class="hw-item">
-        <div class="hw-icon">🌱</div>
-        <div class="hw-item-text">
-          <h5>Задание 4 — Роль в биосфере</h5>
-          <p><strong>Роль насекомых в биосфере:</strong> Насекомые играют важную роль, участвуя в ___ растений, круговороте веществ и ___ цепях.</p>
-        </div>
-      </div>
-      <div class="hw-item">
-        <div class="hw-icon">🧬</div>
-        <div class="hw-item-text">
-          <h5>Задание 5 — Науки</h5>
-          <p><strong>Морфология</strong> изучает ___; <strong>Анатомия</strong> изучает ___; <strong>Физиология</strong> изучает ___.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== ТЕСТ ===== -->
-<section id="test">
-  <div class="section-header">
-    <span class="section-tag">// Шаг 05</span>
-    <h2 class="section-title">Контрольный <span>тест</span></h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="test-container" style="text-align:center;padding:3rem 2rem;">
-    <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
-    <div class="corner-deco bl"></div><div class="corner-deco br"></div>
-    <div class="scan-line"></div>
-    <!-- insect icon -->
-    <div style="font-size:4rem;margin-bottom:1.5rem;filter:drop-shadow(0 0 20px rgba(0,212,255,0.5));">🪲</div>
-    <h3 style="font-family:'Orbitron',monospace;font-size:1.1rem;color:var(--text);margin-bottom:0.75rem;">Готовы проверить знания?</h3>
-    <p style="color:var(--muted);font-size:0.9rem;max-width:480px;margin:0 auto 2rem;line-height:1.7;">
-      Тест по теме «Внутреннее строение насекомых» находится на отдельной странице. Нажмите кнопку ниже, чтобы перейти и пройти контрольный тест.
-    </p>
-    <a href="test.html" class="btn btn-primary" style="font-size:1rem;padding:1rem 3rem;letter-spacing:3px;">
-      ▶ ПЕРЕЙТИ К ТЕСТУ
-    </a>
-    <p style="margin-top:1.5rem;font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--muted);letter-spacing:2px;">
-      Результаты автоматически сохраняются в таблицу · Лист 1
-    </p>
-  </div>
-</section>
-
-<!-- ===== РЕФЛЕКСИЯ ===== -->
+<!-- REFLECTION -->
 <section id="reflection">
-  <div class="section-header">
-    <span class="section-tag">// Шаг 06</span>
-    <h2 class="section-title">Рефлексия <span>урока</span></h2>
-    <div class="section-line"></div>
+  <div class="section-title">Рефлексия</div>
+  <div class="section-subtitle">Подумай над пройденным материалом и выбери смайлик, который отражает твоё состояние.</div>
+  <div class="emoji-row" id="emoji-row"></div>
+  <div class="reflection-chart" id="chart-block">
+    <div class="chart-title">📊 Результаты рефлексии группы</div>
+    <div id="bars-container"></div>
   </div>
-
-  <p style="text-align:center;color:var(--muted);margin-bottom:2rem;font-size:0.9rem;">Как вы себя чувствуете после изучения темы? Оцените своё понимание материала.</p>
-
-  <div class="reflection-grid" id="reflect-mood">
-    <div class="reflect-card" onclick="selectMood(this,'😊 Всё понятно')">
-      <div class="reflect-emoji">😊</div>
-      <div class="reflect-label">Всё понятно</div>
-    </div>
-    <div class="reflect-card" onclick="selectMood(this,'🤔 Есть вопросы')">
-      <div class="reflect-emoji">🤔</div>
-      <div class="reflect-label">Есть вопросы</div>
-    </div>
-    <div class="reflect-card" onclick="selectMood(this,'😐 Нужна помощь')">
-      <div class="reflect-emoji">😐</div>
-      <div class="reflect-label">Нужна помощь</div>
-    </div>
-    <div class="reflect-card" onclick="selectMood(this,'🤩 Очень интересно!')">
-      <div class="reflect-emoji">🤩</div>
-      <div class="reflect-label">Очень интересно!</div>
-    </div>
-  </div>
-
-  <div class="reflect-form">
-    <h3>ИМЯ УЧЕНИКА</h3>
-    <input type="text" id="r-name" class="reflect-textarea" style="min-height:unset;height:44px;resize:none;" placeholder="Введите ваше имя и фамилию...">
-
-    <h3>ЧТО УЗНАЛИ СЕГОДНЯ?</h3>
-    <textarea class="reflect-textarea" id="r-learned" placeholder="Напишите 2-3 самых важных открытия этого урока..."></textarea>
-    <h3>ЧТО БЫЛО СЛОЖНО?</h3>
-    <textarea class="reflect-textarea" id="r-hard" placeholder="Что вызвало затруднение? Какие термины требуют повторения?"></textarea>
-    <h3>ХОЧУ УЗНАТЬ БОЛЬШЕ О...</h3>
-    <textarea class="reflect-textarea" id="r-more" placeholder="Что вас заинтересовало и хотите изучить глубже?"></textarea>
-
-    <div style="display:flex;align-items:center;gap:1rem;margin-top:0.5rem;flex-wrap:wrap;">
-      <button class="btn btn-primary" onclick="submitReflection()">Отправить рефлексию ✓</button>
-      <span id="reflect-status" style="font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--muted);"></span>
-    </div>
-    <p style="margin-top:1rem;font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:1px;">
-      ⬡ Ответы сохраняются в Google Таблицу · Лист 2
-    </p>
+  <div class="reflection-controls">
+    <button class="btn-reset" onclick="resetReflection()">🔄 Сбросить рефлексию</button>
   </div>
 </section>
 
-<footer>
-  ⬡ ЭНТОМОЛОГИЯ — ВНУТРЕННЕЕ СТРОЕНИЕ НАСЕКОМЫХ &nbsp;|&nbsp; БИОЛОГИЯ 7–8 КЛАСС
-</footer>
-
-<div class="toast" id="toast">✓ Отлично!</div>
+<footer>© 2026 · ГККП «Высший колледж лесного хозяйства, экологии и туризма» · Темирболатова А.Б.</footer>
 
 <script>
-// ===== STARFIELD =====
-(function(){
-  const c = document.getElementById('stars');
-  const ctx = c.getContext('2d');
-  let w,h,stars=[];
-  function init(){
-    w=c.width=window.innerWidth; h=c.height=window.innerHeight;
-    stars=[];
-    for(let i=0;i<200;i++){
-      stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.2+0.2,o:Math.random(),s:Math.random()*0.3+0.05});
-    }
-  }
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    stars.forEach(s=>{
-      s.o+=s.s*0.02;
-      if(s.o>1||s.o<0)s.s*=-1;
-      ctx.beginPath();
-      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(180,220,255,${s.o*0.6})`;
-      ctx.fill();
-    });
-    requestAnimationFrame(draw);
-  }
-  init(); draw();
-  window.addEventListener('resize',init);
-})();
-
-// ===== QUIZ DATA =====
-const quizData = [
-  {
-    q: 'Энтомология — это...',
-    options:[
-      'Раздел биологии, изучающий грибы',
-      'Раздел биологии, изучающий насекомых: их строение, поведение и роль в природе',
-      'Наука о внутреннем строении животных',
-      'Изучение клеток и тканей'
-    ],
-    correct:1
-  },
-  {
-    q: 'Насекомые существуют на Земле примерно...',
-    options:[
-      '50–100 миллионов лет',
-      '100–200 миллионов лет',
-      '300–400 миллионов лет',
-      'Около 1 миллиарда лет'
-    ],
-    correct:2
-  },
-  {
-    q: 'В каких условиях среды обитания способны жить насекомые?',
-    options:[
-      'Только на суше и в тёплом климате',
-      'Исключительно в тропических лесах',
-      'На суше, в почве, в воде и в экстремальных климатических условиях',
-      'Только в воде и почве'
-    ],
-    correct:2
-  },
-  {
-    q: 'Роль насекомых в биосфере — это...',
-    options:[
-      'Только разрушение органических веществ',
-      'Опыление растений, участие в круговороте веществ и пищевых цепях',
-      'Исключительно вредительство сельскому хозяйству',
-      'Только питание для птиц'
-    ],
-    correct:1
-  },
-  {
-    q: 'Морфология насекомых изучает...',
-    options:[
-      'Функции органов и процессы жизнедеятельности',
-      'Строение и расположение органов тела насекомых',
-      'Внутреннее строение, органы и системы органов',
-      'Поведение и инстинкты насекомых'
-    ],
-    correct:1
-  },
-  {
-    q: 'Анатомия насекомых изучает...',
-    options:[
-      'Строение и расположение органов снаружи',
-      'Роль насекомых в биосфере',
-      'Внутреннее строение насекомых, их органы и системы органов',
-      'Классификацию и систематику насекомых'
-    ],
-    correct:2
-  },
-  {
-    q: 'Физиология насекомых изучает...',
-    options:[
-      'Внешнее строение тела',
-      'Функции органов и систем органов, а также процессы жизнедеятельности',
-      'Историческое развитие насекомых',
-      'Распределение насекомых по регионам'
-    ],
-    correct:1
-  }
+// ================= DZ CARDS =================
+const questions = [
+  { q: "Что изучает энтомология?", a: "Раздел биологии, который изучает насекомых — их строение, развитие, поведение, разнообразие, роль в природе и влияние на человека." },
+  { q: "Сколько лет существуют насекомые на Земле?", a: "Около 300–400 миллионов лет. Они появились ещё в девонском периоде, задолго до динозавров." },
+  { q: "В каких условиях способны жить насекомые?", a: "На суше, в почве, в воде и даже в экстремальных климатических условиях — они крайне адаптивны." },
+  { q: "Какова роль насекомых в биосфере?", a: "Насекомые участвуют в опылении растений, круговороте веществ и пищевых цепях." },
+  { q: "Что изучает морфология насекомых?", a: "Строение и расположение органов тела насекомых." },
+  { q: "Что изучает анатомия насекомых?", a: "Внутреннее строение насекомых, их органы и системы органов." },
+  { q: "Что изучает физиология насекомых?", a: "Функции органов и систем органов, а также процессы жизнедеятельности насекомых." },
 ];
 
-let quizAnswers = {};
-let quizCorrect = 0;
-
-function renderQuiz(){
-  const cont = document.getElementById('quiz-container');
-  document.getElementById('quiz-total').textContent = quizData.length;
-  cont.innerHTML = '';
-  quizData.forEach((q,qi)=>{
+function initCards() {
+  const grid = document.getElementById('cards-grid');
+  const saved = JSON.parse(localStorage.getItem('dz_flipped') || '[]');
+  grid.innerHTML = '';
+  questions.forEach((item, i) => {
+    const isFlipped = saved.includes(i);
     const card = document.createElement('div');
-    card.className='quiz-card';
-    card.innerHTML=`
-      <div class="q-label">// ВОПРОС ${String(qi+1).padStart(2,'0')}</div>
-      <div class="q-text">${q.q}</div>
-      <div class="quiz-options" id="qopts-${qi}">
-        ${q.options.map((o,oi)=>`<button class="quiz-option" onclick="answerQuiz(${qi},${oi})">${o}</button>`).join('')}
-      </div>
-      <div class="quiz-feedback" id="qfb-${qi}"></div>
-    `;
-    cont.appendChild(card);
-  });
-}
-
-function answerQuiz(qi,oi){
-  if(quizAnswers[qi]!==undefined) return;
-  quizAnswers[qi]=oi;
-  const opts=document.querySelectorAll(`#qopts-${qi} .quiz-option`);
-  const fb=document.getElementById(`qfb-${qi}`);
-  opts.forEach((btn,i)=>{
-    if(i===quizData[qi].correct) btn.classList.add('correct');
-    else if(i===oi) btn.classList.add('wrong');
-    btn.disabled=true;
-  });
-  if(oi===quizData[qi].correct){
-    quizCorrect++;
-    fb.textContent='✓ Верно!';
-    fb.className='quiz-feedback show ok';
-    showToast('✓ Правильный ответ!');
-  } else {
-    fb.textContent=`✗ Правильный ответ: "${quizData[qi].options[quizData[qi].correct]}"`;
-    fb.className='quiz-feedback show err';
-  }
-  document.getElementById('quiz-score').textContent=quizCorrect;
-  const total=Object.keys(quizAnswers).length;
-  if(total===quizData.length){
-    document.getElementById('quiz-status').textContent=`Завершено! ${quizCorrect}/${quizData.length}`;
-  }
-}
-
-// ===== TABS =====
-function showTab(id){
-  document.querySelectorAll('.theory-panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
-  event.target.classList.add('active');
-}
-
-// ===== REFLECTION =====
-let selectedMood = '';
-
-function selectMood(el, label){
-  selectedMood = label;
-  document.querySelectorAll('.reflect-card').forEach(c=>{
-    c.classList.remove('selected');
-    c.querySelector('.reflect-label').classList.remove('reflect-label-selected');
-  });
-  el.classList.add('selected');
-  el.querySelector('.reflect-label').classList.add('reflect-label-selected');
-}
-
-// ⬇️ ВСТАВЬТЕ СЮДА ВАШ APPS SCRIPT URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDemYuv6XT7viF3Q0bDGhJSBlE5uP2Xb3I2IoMSDi6xlFdqlADEv2yAn5BkGXkkgNBdA/exec';
-
-async function submitReflection(){
-  const name  = document.getElementById('r-name').value.trim();
-  const l     = document.getElementById('r-learned').value.trim();
-  const h     = document.getElementById('r-hard').value.trim();
-  const m     = document.getElementById('r-more').value.trim();
-  const status = document.getElementById('reflect-status');
-
-  if(!name){ showToast('⚠ Введите ваше имя'); return; }
-  if(!l && !h && !m){ showToast('⚠ Заполните хотя бы одно поле'); return; }
-
-  status.textContent = '⏳ Отправка...';
-  status.style.color = 'var(--muted)';
-
-  const payload = {
-    type: "reflection", // Обязательный флаг
-    name:    name,
-    mood:    selectedMood || '—',
-    learned: l || '—',
-    hard:    h || '—',
-    more:    m || '—'
-  };
-
-  try {
-    await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+    card.className = 'flip-card' + (isFlipped ? ' flipped' : '');
+    card.innerHTML = `
+      <div class="flip-card-inner">
+        <div class="flip-face">
+          <span class="q-num">${i+1}</span>
+          <div class="q-text">${item.q}</div>
+          <div class="hint">Нажми, чтобы узнать ответ</div>
+        </div>
+        <div class="flip-back">
+          <div class="a-label">Ответ</div>
+          <div class="a-text">${item.a}</div>
+        </div>
+      </div>`;
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
+      const flipped = [...document.querySelectorAll('.flip-card.flipped')].map(c => [...document.querySelectorAll('.flip-card')].indexOf(c));
+      localStorage.setItem('dz_flipped', JSON.stringify(flipped));
     });
-    // no-cors means we can't read response, but if no error thrown it sent
-    status.textContent = '✓ Отправлено в таблицу!';
-    status.style.color = 'var(--accent2)';
-    showToast('✓ Рефлексия сохранена!');
-    document.getElementById('r-name').value    = '';
-    document.getElementById('r-learned').value = '';
-    document.getElementById('r-hard').value    = '';
-    document.getElementById('r-more').value    = '';
-    selectedMood = '';
-    document.querySelectorAll('.reflect-card').forEach(c=>{
-      c.classList.remove('selected');
-      c.querySelector('.reflect-label').classList.remove('reflect-label-selected');
-    });
-    setTimeout(()=>{ status.textContent=''; }, 4000);
-  } catch(err) {
-    status.textContent = '✗ Ошибка отправки. Проверьте URL.';
-    status.style.color = 'var(--accent3)';
-  }
+    grid.appendChild(card);
+  });
+}
+function resetCards() {
+  localStorage.removeItem('dz_flipped');
+  initCards();
+}
+initCards();
+
+// ================= THEORY TABS =================
+const tabs = [
+  {
+    label: "Пищеварительная",
+    icon: "🫁",
+    text: `<h3>Пищеварительная система</h3>
+    <p>Пищеварительная система насекомых — это трубчатый орган, обеспечивающий приём пищи, её переваривание, всасывание питательных веществ и выведение непереваренных остатков.</p>
+    <div class="sub-section"><h4>1. Передняя кишка</h4><p>Ротовая полость, глотка, пищевод, зоб, мускульный желудок. <strong>Функции:</strong> захват, накопление и механическая обработка пищи.</p></div>
+    <div class="sub-section"><h4>2. Средняя кишка</h4><p>Основной отдел пищеварения. Выделяет ферменты, происходит всасывание питательных веществ. Особенность — отсутствует хитиновая выстилка.</p></div>
+    <div class="sub-section"><h4>3. Задняя кишка</h4><p>Подвздошная, прямая кишка, анальное отверстие. <strong>Функции:</strong> всасывание воды и формирование каловых масс.</p></div>
+    <div class="sub-section"><h4>Дополнительные органы</h4><ul><li><strong>Слюнные железы</strong> — смачивают пищу, могут выделять ферменты или ядовитые вещества</li><li><strong>Симбиотические микроорганизмы</strong> — участвуют в переваривании растительной пищи</li></ul></div>`,
+    img: "2.jpeg"
+  },
+  {
+    label: "Дыхательная",
+    icon: "💨",
+    text: `<h3>Дыхательная система</h3>
+    <p>Насекомые дышат с помощью <strong>трахейной системы</strong>, которая обеспечивает прямую доставку кислорода к органам и тканям, минуя кровеносную систему.</p>
+    <div class="sub-section"><h4>Строение</h4><ul><li><strong>Дыхальца (стигмы)</strong> — отверстия на боках грудных и брюшных сегментов</li><li><strong>Трахеи</strong> — разветвлённые трубочки, выстланные хитином</li><li><strong>Трахеолы</strong> — мельчайшие ответвления, контактирующие с клетками</li></ul></div>
+    <div class="sub-section"><h4>Особенности</h4><ul><li>Кровеносная система не участвует в переносе кислорода</li><li>Высокая эффективность газообмена</li><li>Экономия воды (дыхальца могут закрываться)</li><li>Приспособленность к наземному образу жизни</li></ul></div>`,
+    img: "2.2.jpeg"
+  },
+  {
+    label: "Кровеносная",
+    icon: "❤️",
+    text: `<h3>Кровеносная система</h3>
+    <p>Кровеносная система насекомых <strong>незамкнутая</strong>. Она выполняет перенос питательных веществ, гормонов и продуктов обмена, но <strong>не участвует в доставке кислорода</strong> — за дыхание отвечает трахейная система.</p>
+    <div class="sub-section"><h4>Строение</h4><ul><li><strong>Сердце</strong> — продольный спинной сосуд, разделённый на камеры с клапанами</li><li><strong>Аорта</strong> — продолжение сердца; обеспечивает движение гемолимфы к головным органам</li><li><strong>Гемолимфа</strong> — аналог крови; переносит питательные вещества, гормоны, продукты обмена, участвует в иммунной защите</li></ul></div>
+    <div class="sub-section"><h4>Значение</h4><p>Обеспечивает питание клеток, участвует в терморегуляции и иммунной защите.</p></div>`,
+    img: "2.3.jpeg",
+    videoUrl: null
+  },
+  {
+    label: "Нервная",
+    icon: "🧠",
+    text: `<h3>Нервная система</h3>
+    <p>Нервная система насекомых обеспечивает связь организма с окружающей средой, координацию движений и регуляцию работы внутренних органов. Имеет <strong>узловой (ганглионарный) тип</strong>.</p>
+    <div class="sub-section"><h4>1. ЦНС</h4><ul><li><strong>Надглоточный ганглий (мозг)</strong> — регулирует органы чувств и сложные формы поведения</li><li><strong>Подглоточный ганглий</strong> — управляет ротовым аппаратом</li><li><strong>Брюшная нервная цепочка</strong> — система ганглиев, контролирующих движения</li></ul></div>
+    <div class="sub-section"><h4>2. Периферическая НС</h4><p>Нервы, отходящие от ганглиев; связывает ЦНС с органами и мышцами.</p></div>
+    <div class="sub-section"><h4>3. Висцеральная НС</h4><p>Регулирует деятельность внутренних органов; обеспечивает автоматические реакции.</p></div>`,
+    img: "2.4.jpeg"
+  },
+  {
+    label: "Выделительная",
+    icon: "🔬",
+    text: `<h3>Выделительная система</h3>
+    <p>Обеспечивает <strong>удаление продуктов обмена веществ</strong>, поддержание водно-солевого баланса и приспособление к наземному образу жизни.</p>
+    <div class="sub-section"><h4>Мальпигиевы сосуды</h4><ul><li>Тонкие трубочки, впадающие в задний отдел кишечника</li><li>Погружены в полость тела и омываются гемолимфой</li><li>Основной орган выделения</li></ul></div>
+    <div class="sub-section"><h4>Жировое тело / задняя кишка</h4><ul><li>Участвует в обратном всасывании воды и солей</li><li>Способствует образованию сухих экскрементов</li></ul></div>
+    <div class="sub-section"><h4>Механизм</h4><p>Продукты обмена (в основном <strong>мочевая кислота</strong>) поступают из гемолимфы в мальпигиевы сосуды, далее попадают в кишечник и выводятся наружу. Вода частично возвращается в организм.</p></div>`,
+    img: "2.5.jpeg"
+  },
+];
+
+function initTabs() {
+  const row = document.getElementById('tabs-row');
+  const panels = document.getElementById('tab-panels');
+  tabs.forEach((tab, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = tab.icon + ' ' + tab.label;
+    btn.onclick = () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + i).classList.add('active');
+    };
+    row.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel' + (i === 0 ? ' active' : '');
+    panel.id = 'panel-' + i;
+    const imgEl = tab.img ? `<img src="${tab.img}" alt="${tab.label}" onerror="this.style.display='none'">` : '';
+    const videoEl = tab.videoUrl ? `<video src="${tab.videoUrl}" controls style="width:100%;border-radius:14px;margin-top:12px;"></video>` : '';
+    panel.innerHTML = `
+      <div class="tab-text">${tab.text}</div>
+      <div class="tab-media">${imgEl}${videoEl}</div>`;
+    panels.appendChild(panel);
+  });
+}
+initTabs();
+
+// ================= MULTI-USER REFLECTION (ОБНОВЛЕННАЯ) =================
+const emojis = [
+  { em: "😄", label: "Отлично!", key: "excellent", color: "#4caf50" },
+  { em: "🙂", label: "Хорошо", key: "good", color: "#8bc34a" },
+  { em: "😐", label: "Нормально", key: "ok", color: "#ffc107" },
+  { em: "😔", label: "Сложно", key: "hard", color: "#ff9800" },
+  { em: "😕", label: "Не понял", key: "confused", color: "#f44336" },
+];
+
+function getReflectionData() {
+  return JSON.parse(localStorage.getItem('reflection_data') || '{}');
+}
+function saveReflectionData(data) {
+  localStorage.setItem('reflection_data', JSON.stringify(data));
 }
 
-// ===== TOAST =====
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+function initReflection() {
+  const row = document.getElementById('emoji-row');
+  row.innerHTML = '';
+  
+  emojis.forEach(e => {
+    const btn = document.createElement('button');
+    btn.className = 'emoji-btn';
+    btn.innerHTML = `<span class="emoji">${e.em}</span>${e.label}`;
+    
+    btn.onclick = () => {
+      const d = getReflectionData();
+      // Просто добавляем +1 к выбранному смайлику (накопительный эффект для всей группы)
+      d[e.key] = (d[e.key] || 0) + 1;
+      saveReflectionData(d);
+      
+      // Кратковременная анимация «вспышки» для подтверждения клика
+      btn.classList.add('selected');
+      setTimeout(() => {
+        btn.classList.remove('selected');
+      }, 400);
+      
+      renderBars();
+    };
+    row.appendChild(btn);
+  });
+  renderBars();
 }
 
-// ===== INIT =====
-renderQuiz();
-
-// Scroll reveal
-const observer=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.style.opacity='1';
-      e.target.style.transform='translateY(0)';
+function renderBars() {
+  const data = getReflectionData();
+  const total = emojis.reduce((s, e) => s + (data[e.key] || 0), 0);
+  const container = document.getElementById('bars-container');
+  container.innerHTML = '';
+  
+  emojis.forEach(e => {
+    const count = data[e.key] || 0;
+    const pct = total > 0 ? Math.round(count / total * 100) : 0;
+    
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    
+    // Формируем текст ответа
+    let textContent = '';
+    if (count > 0) {
+      textContent = `${count} ${pluralize(count, ['студент', 'студента', 'студентов'])} (${pct}%)`;
+    } else {
+      textContent = '0 голосов (0%)';
     }
-  });
-},{threshold:0.1});
 
-document.querySelectorAll('.quiz-card,.task-card,.hw-item,.reflect-card').forEach(el=>{
-  el.style.opacity='0';
-  el.style.transform='translateY(20px)';
-  el.style.transition='opacity 0.6s ease, transform 0.6s ease';
-  observer.observe(el);
-});
+    row.innerHTML = `
+      <div class="bar-label">${e.em} ${e.label}</div>
+      <div class="bar-track">
+        <div class="bar-text">${textContent}</div>
+        <div class="bar-fill" style="width:${pct}%; background-color:${e.color};"></div>
+      </div>`;
+    container.appendChild(row);
+  });
+}
+
+// Вспомогательная функция для красивого склонения слова "студент"
+function pluralize(number, titles) {
+  const cases = [2, 0, 1, 1, 1, 2];
+  return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
+}
+
+function resetReflection() {
+  if (confirm("Вы действительно хотите сбросить все результаты голосования группы?")) {
+    localStorage.removeItem('reflection_data');
+    initReflection();
+  }
+}
+
+initReflection();
 </script>
 </body>
 </html>
