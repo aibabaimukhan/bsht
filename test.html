@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="kk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Тест: Внешнее строение насекомых</title>
+    <title>Тест: Жәндіктердің сыртқы дене құрылысы</title>
     <style>
         :root {
             --primary-color: #1a3a1a;
@@ -14,7 +14,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             background-color: var(--bg-color);
             padding: 12px;
             color: #333;
@@ -89,7 +89,11 @@
             font-size: 0.95rem;
         }
         .option:hover { background: #f0f8f0; border-color: #8dc88d; }
-        input[type="radio"] { margin-right: 12px; cursor: pointer; width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--accent-color); }
+        input[type="radio"] {
+            margin-right: 12px; cursor: pointer;
+            width: 18px; height: 18px; flex-shrink: 0;
+            accent-color: var(--accent-color);
+        }
         .btn-submit {
             display: block;
             width: 100%;
@@ -103,6 +107,7 @@
             cursor: pointer;
             transition: background 0.3s;
             margin-top: 20px;
+            font-family: 'Times New Roman', Times, serif;
         }
         .btn-submit:hover:not(:disabled) { background-color: #219653; }
         .btn-submit:disabled { background-color: #bdc3c7; cursor: not-allowed; }
@@ -135,158 +140,92 @@
     </style>
 </head>
 <body oncontextmenu="return false;">
- 
+
 <div id="loading-overlay">
-    <div style="font-size: 20px; font-weight: bold; color: var(--primary-color);">Идет отправка... / Жіберілуде...</div>
+    <div style="font-size: 20px; font-weight: bold; color: var(--primary-color);">Жіберілуде / Отправка...</div>
 </div>
- 
+
 <div class="container">
     <div id="quiz-content">
-        <h1>🪲 Тест: Внешнее строение насекомых</h1>
-        <div class="h1-sub">Жәндіктердің сыртқы дене құрылысы — Темирболатова А.Б.</div>
- 
+        <h1>🪲 Тест: Жәндіктердің сыртқы дене құрылысы</h1>
+        <div class="h1-sub">Темирболатова А.Б. · 2 курс · Л-21</div>
+
         <form id="quizForm">
             <div class="user-info">
                 <div class="input-group">
-                    <label for="fio">ФИО студента / Студенттің аты-жөні *</label>
-                    <input type="text" id="fio" name="fio" required placeholder="Введите ваше имя">
+                    <label for="fio">Студенттің аты-жөні / ФИО студента *</label>
+                    <input type="text" id="fio" name="fio" required placeholder="Атыңызды енгізіңіз">
                 </div>
                 <div class="input-group">
-                    <label for="group">Группа / Топ *</label>
-                    <input type="text" id="group" name="group" required placeholder="Напр. Л-21">
+                    <label for="group">Топ / Группа *</label>
+                    <input type="text" id="group" name="group" required placeholder="Мысалы: Л-21">
                 </div>
             </div>
- 
+
             <div id="questionsContainer"></div>
- 
-            <button type="submit" id="submitBtn" class="btn-submit">✅ Отправить ответы / Жауаптарды жіберу</button>
+
+            <button type="submit" id="submitBtn" class="btn-submit">✅ Жауаптарды жіберу / Отправить ответы</button>
         </form>
     </div>
- 
+
     <div id="success-message">
         <div class="icon">✅</div>
         <h2>Рахмет! Жауаптарыңыз қабылданды.</h2>
         <p>Спасибо! Результаты теста успешно отправлены преподавателю.</p>
         <p id="result-summary" style="font-weight: bold; font-size: 1.3em; margin-top: 15px; color: var(--primary-color);"></p>
         <button class="btn-submit" style="background-color: #1a3a1a; margin-top: 30px; max-width: 300px; margin-left: auto; margin-right: auto;" onclick="goToHome()">
-            ← Вернуться на главную
+            ← Басты бетке оралу / Вернуться на главную
         </button>
     </div>
 </div>
- 
+
 <script>
-    // 20 вопросов по теме «Внешнее строение насекомых»
-    // c: индекс правильного ответа (0-based)
+    // 7 вопросов на казахском языке
     const questions = [
         {
-            q: "Жәндіктің денесі неше бөлімге бөлінеді? / На сколько отделов делится тело насекомого?",
-            a: ["2 бөлім", "3 бөлім", "4 бөлім", "5 бөлім"],
+            q: "1. Жәндіктің денесі неше бөлімге бөлінеді?",
+            a: ["а) 2", "б) 3", "в) 4"],
             c: 1
         },
         {
-            q: "Жәндіктің бас бөлімінде не орналасады? / Что расположено на голове насекомого?",
-            a: ["Қанаттар / Крылья", "Аяқтар / Ноги", "Мұртша мен көздер / Усики и глаза", "Дыхальца / Стигмы"],
+            q: "2. Жәндіктің бас бөлімінде не орналасады?",
+            a: ["а) қанаттар", "б) аяқтар", "в) мұртша мен көздер"],
             c: 2
         },
         {
-            q: "Жәндіктерде неше жұп аяқ болады? / Сколько пар ног у насекомых?",
-            a: ["2 жұп / 2 пары", "3 жұп / 3 пары", "4 жұп / 4 пары", "5 жұп / 5 пар"],
+            q: "3. Жәндіктерде неше жұп аяқ болады?",
+            a: ["а) 2", "б) 3", "в) 4"],
             c: 1
         },
         {
-            q: "Қанаттар жәндіктің қай бөліміне бекінеді? / К какому отделу тела прикреплены крылья?",
-            a: ["Басына / Голове", "Көкірекке / Груди", "Құрсаққа / Брюшку", "Мұртшаға / Усикам"],
+            q: "4. Қанаттар қай бөлікке бекінеді?",
+            a: ["а) басына", "б) көкірекке", "в) құрсаққа"],
             c: 1
         },
         {
-            q: "Мұртшалар жәндіктерге не үшін қажет? / Для чего нужны усики насекомым?",
-            a: ["Тыныс алу үшін / Для дыхания", "Иіс сезу және сипап сезу үшін / Для обоняния и осязания", "Қорғану үшін / Для защиты", "Ұшу үшін / Для полёта"],
+            q: "5. Мұртшалар жәндіктерге не үшін қажет?",
+            a: ["а) тыныс алу үшін", "б) иіс сезу және сипап сезу үшін", "в) қорғану үшін"],
             c: 1
         },
         {
-            q: "Жәндіктердің сыртқы жабыны қалай аталады? / Как называется наружный покров насекомых?",
-            a: ["Тері / Кожа", "Хитин / Хитин", "Қабыршақ / Чешуя", "Жүн / Шерсть"],
+            q: "6. Жәндіктердің сыртқы жабыны қалай аталады?",
+            a: ["а) тері", "б) хитин", "в) қабыршақ"],
             c: 1
         },
         {
-            q: "Жәндіктің көкірегі неше буыннан тұрады? / Из скольких сегментов состоит грудь насекомого?",
-            a: ["1 буын / 1 сегмент", "2 буын / 2 сегмента", "3 буын / 3 сегмента", "4 буын / 4 сегмента"],
-            c: 2
+            q: "7. Жәндіктер қандай пайда келтіреді?",
+            a: ["а) өсімдіктерді тозаңдандырады", "б) тастарды бұзады", "в) суды тазартады"],
+            c: 0
         },
-        {
-            q: "Тыныс алу үшін қолданылатын тесіктер қалай аталады? / Как называются отверстия для дыхания?",
-            a: ["Трахеолар / Трахеолы", "Стигмалар (дыхальца) / Стигмы", "Нефридиялар / Нефридии", "Поралар / Поры"],
-            c: 1
-        },
-        {
-            q: "Кеміргіш ауыз аппараты қандай жәндіктерде кездеседі? / Какой тип ротового аппарата у жуков и саранчи?",
-            a: ["Сорғыш / Сосущий", "Жалағыш / Лижущий", "Кеміргіш / Грызущий", "Тесіп-сорғыш / Колюще-сосущий"],
-            c: 2
-        },
-        {
-            q: "Өрмекші жәндікке жатпайтын себебі неліктен? / Почему паук не является насекомым?",
-            a: ["Сыртқы қаңқасы жоқ / Нет наружного скелета", "4 жұп аяқ бар, мұртшасы жоқ / 4 пары ног, нет усиков", "Өте кіші / Слишком маленький", "Суда тіршілік етеді / Живёт в воде"],
-            c: 1
-        },
-        {
-            q: "Жәндіктердің фасетті көздері не береді? / Что обеспечивают фасеточные глаза насекомых?",
-            a: ["Тар бұрышты көру / Узкий угол обзора", "Кең бұрышты көру / Широкий угол обзора", "Тек түстерді ажырату / Только различение цветов", "Инфракызыл сәулені көру / Видение инфракрасного"],
-            c: 1
-        },
-        {
-            q: "Құрсақ бөлімінде қандай органдар орналасады? / Какие органы расположены в брюшке?",
-            a: ["Тек мозг / Только мозг", "Ас қорыту, тыныс алу, көбею мүшелері / Органы пищеварения, дыхания, размножения", "Тек аяқтар / Только ноги", "Тек қанаттар / Только крылья"],
-            c: 1
-        },
-        {
-            q: "Шегіртке аяқтарының типі қандай? / Какой тип ног у кузнечика?",
-            a: ["Жүзу / Плавательные", "Қазу / Копательные", "Секіру / Прыгательные", "Ұстау / Хватательные"],
-            c: 2
-        },
-        {
-            q: "Аралардың ауыз аппараты қандай типке жатады? / К какому типу относится ротовой аппарат пчёл?",
-            a: ["Тек кеміргіш / Только грызущий", "Кеміргіш-жалағыш / Грызуще-лижущий", "Тек сорғыш / Только сосущий", "Жалағыш-сорғыш / Лижуще-сосущий"],
-            c: 1
-        },
-        {
-            q: "Көбелектің ауыз аппараты қандай? / Какой ротовой аппарат у бабочек?",
-            a: ["Кеміргіш / Грызущий", "Сорғыш (хоботок) / Сосущий (хоботок)", "Жалағыш / Лижущий", "Тесіп-сорғыш / Колюще-сосущий"],
-            c: 1
-        },
-        {
-            q: "Жәндіктердің хитинді сыртқы қаңқасы қандай қызмет атқарады? / Какую функцию выполняет хитиновый покров?",
-            a: ["Тек түс береді / Только даёт цвет", "Қорғаныс, тіреу, сусыздану алдын алу / Защита, опора, предотвращение обезвоживания", "Тыныс алуға қатысады / Участвует в дыхании", "Тамақтануға қатысады / Участвует в питании"],
-            c: 1
-        },
-        {
-            q: "Шыбынның екінші жұп қанаты қандай мүшеге айналған? / Во что превратилась вторая пара крыльев у мух?",
-            a: ["Аяққа / В ноги", "Мұртшаға / В усики", "Жүжілдеуіш (жужжальца) / В жужжальца", "Жойылып кеткен / Исчезла полностью"],
-            c: 2
-        },
-        {
-            q: "Жәндіктер орман шаруашылығына қандай пайда келтіреді? / Какую пользу приносят насекомые лесному хозяйству?",
-            a: ["Ағаштарды кеседі / Срубают деревья", "Өсімдіктерді тозаңдандырады, топырақты жақсартады / Опыляют растения, улучшают почву", "Суды ластайды / Загрязняют воду", "Жануарларды аулайды / Охотятся на животных"],
-            c: 1
-        },
-        {
-            q: "Жәндіктердің антенналары (мұртшалары) қай жерде орналасады? / Где расположены антенны (усики) насекомых?",
-            a: ["Көкіректе / На груди", "Құрсақта / На брюшке", "Аяқтарда / На ногах", "Маңдайда, көздер арасында / На лбу, между глазами"],
-            c: 3
-        },
-        {
-            q: "Жәндіктердің негізгі систематикалық белгісі қайсы? / Какой главный систематический признак насекомых?",
-            a: ["Хитинді қабаты / Хитиновый покров", "3 жұп аяқ және денесінің 3 бөлімге бөлінуі / 3 пары ног и деление тела на 3 отдела", "Қанаттарының болуы / Наличие крыльев", "Метаморфозбен дамуы / Развитие с метаморфозом"],
-            c: 1
-        }
     ];
- 
+
     const container = document.getElementById('questionsContainer');
- 
+
     questions.forEach((item, index) => {
         const qDiv = document.createElement('div');
         qDiv.className = 'question';
         const qText = document.createElement('p');
-        qText.innerText = `${index + 1}. ${item.q}`;
+        qText.innerText = item.q;
         qDiv.appendChild(qText);
         const optionsDiv = document.createElement('div');
         optionsDiv.className = 'options';
@@ -305,37 +244,37 @@
         qDiv.appendChild(optionsDiv);
         container.appendChild(qDiv);
     });
- 
+
     // Блокировка инструментов разработчика
     document.onkeydown = function(e) {
         if (e.keyCode === 123) return false;
         if (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(String.fromCharCode(e.keyCode))) return false;
         if (e.ctrlKey && e.keyCode === 85) return false;
     };
- 
+
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwLrytzhyRd5CZG2nE3XM2Cia972Xs0aCIXBoB-n-Or2usLpM6y9qpHyVfRZGKrJK5yRw/exec';
- 
+
     document.getElementById('quizForm').onsubmit = function(e) {
         e.preventDefault();
         const submitBtn = document.getElementById('submitBtn');
         submitBtn.disabled = true;
         submitBtn.innerText = "Жіберілуде / Отправка...";
         document.getElementById('loading-overlay').style.display = 'flex';
- 
+
         const formData = new FormData(this);
         const data = { fio: formData.get('fio'), group: formData.get('group') };
- 
+
         let score = 0;
         questions.forEach((item, index) => {
             const chosen = formData.get(`q${index}`);
             if (chosen !== null && parseInt(chosen) === item.c) score++;
-            data[`q${index}`] = chosen !== null ? item.a[parseInt(chosen)] : 'Не выбрано';
+            data[`q${index}`] = chosen !== null ? item.a[parseInt(chosen)] : 'Таңдалмаған';
         });
         data.score = score;
         data.total = questions.length;
-        data.subject = 'Внешнее строение насекомых';
+        data.subject = 'Жәндіктердің сыртқы дене құрылысы';
         data.date = new Date().toLocaleString('ru-KZ');
- 
+
         fetch(WEB_APP_URL, {
             method: 'POST',
             mode: 'no-cors',
@@ -346,16 +285,17 @@
             document.getElementById('quiz-content').style.display = 'none';
             document.getElementById('loading-overlay').style.display = 'none';
             document.getElementById('success-message').style.display = 'block';
-            document.getElementById('result-summary').innerText = `Нәтиже / Результат: ${score} из ${questions.length} (${Math.round(score/questions.length*100)}%)`;
+            document.getElementById('result-summary').innerText =
+                `Нәтиже / Результат: ${score} из ${questions.length} (${Math.round(score/questions.length*100)}%)`;
         }).catch(err => {
             console.error(err);
             alert('Қате / Ошибка при отправке. Попробуйте ещё раз.');
             submitBtn.disabled = false;
-            submitBtn.innerText = "✅ Отправить ответы / Жауаптарды жіберу";
+            submitBtn.innerText = "✅ Жауаптарды жіберу / Отправить ответы";
             document.getElementById('loading-overlay').style.display = 'none';
         });
     };
- 
+
     function goToHome() {
         window.location.href = "index.html";
     }
